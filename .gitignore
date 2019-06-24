@@ -1,0 +1,38 @@
+# maven ignore
+target/
+*.war
+*.zip
+*.tar
+*.tar.gz
+
+# eclipse ignore
+.settings/
+.project
+.classpath
+.metadata/
+
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
+# temp ignore
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+*.java~
+*.properties~
+*.xml~
+
+# system ignore
+.DS_Store
+Thumbs.db
+
+/LICENSE
+/PULL_REQUEST_TEMPLATE.zh-CN.md
+/ISSUE_TEMPLATE.zh-CN.md
+
+#pom.xml
