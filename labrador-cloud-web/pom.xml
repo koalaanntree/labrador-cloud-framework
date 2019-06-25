@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>labrador-cloud-core</artifactId>
+    <artifactId>labrador-cloud-web</artifactId>
 
     <dependencies>
         <dependency>
@@ -18,21 +18,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>net.bestjoy</groupId>
+            <artifactId>labrador-cloud-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-        </dependency>
+
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
         </dependency>
     </dependencies>
 

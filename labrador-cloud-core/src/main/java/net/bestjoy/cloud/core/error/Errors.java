@@ -1,4 +1,4 @@
-package net.bestjoy.cloud.error.bean;
+package net.bestjoy.cloud.core.error;
 
 /**
  * 定义异常常量

@@ -1,4 +1,4 @@
-package net.bestjoy.cloud.error.bean;
+package net.bestjoy.cloud.core.error;
 
 import lombok.Data;
 import lombok.ToString;
@@ -31,4 +31,6 @@ public class CodeAndMessage {
     public static CodeAndMessage create(Integer code, String message) {
         return new CodeAndMessage(code, message);
     }
+
+
 }

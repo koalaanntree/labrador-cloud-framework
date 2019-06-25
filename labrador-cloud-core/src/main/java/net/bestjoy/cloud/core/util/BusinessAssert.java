@@ -1,8 +1,8 @@
-package net.bestjoy.cloud.error.util;
+package net.bestjoy.cloud.core.util;
 
-import net.bestjoy.cloud.error.bean.BusinessException;
-import net.bestjoy.cloud.error.bean.BusinessUrns;
-import net.bestjoy.cloud.error.bean.Errors;
+
+import net.bestjoy.cloud.core.error.BusinessException;
+import net.bestjoy.cloud.core.error.Errors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 

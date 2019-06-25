@@ -50,12 +50,6 @@
                 <artifactId>labrador-cloud-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>net.bestjoy</groupId>
-                <artifactId>labrador-cloud-error</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

@@ -1,8 +1,8 @@
-package net.bestjoy.cloud.core.error;
+package net.bestjoy.cloud.web.exception;
 
-import net.bestjoy.cloud.core.bean.Result;
-import net.bestjoy.cloud.error.bean.BusinessException;
-import net.bestjoy.cloud.error.bean.Errors;
+import net.bestjoy.cloud.core.error.BusinessException;
+import net.bestjoy.cloud.core.error.Errors;
+import net.bestjoy.cloud.web.bean.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

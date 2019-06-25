@@ -1,9 +1,9 @@
-package net.bestjoy.cloud.core.bean;
+package net.bestjoy.cloud.web.bean;
 
 import lombok.Data;
 import lombok.ToString;
-import net.bestjoy.cloud.error.bean.CodeAndMessage;
-import net.bestjoy.cloud.error.bean.ErrorCodeAndMessage;
+import net.bestjoy.cloud.core.error.CodeAndMessage;
+import net.bestjoy.cloud.core.error.ErrorCodeAndMessage;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package net.bestjoy.cloud.error.bean;
+package net.bestjoy.cloud.core.error;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
