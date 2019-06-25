@@ -1,40 +1,37 @@
 package net.bestjoy.cloud.error.bean;
 
-import lombok.Getter;
-import net.bestjoy.cloud.core.bean.BusinessCodeAndMessage;
-import net.bestjoy.cloud.core.bean.CodeAndMessage;
+import com.alibaba.fastjson.JSONObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * 业务异常
+ *
+ * @author ray
  */
-@Getter
+@Data
+@AllArgsConstructor
 public class BusinessException extends RuntimeException {
-    private Integer code;
+    /**
+     * 错误信息
+     */
+    private ErrorCodeAndMessage error;
+    /**
+     * 异常对象，用于返回信息
+     */
+    private Object data;
 
-    public String message;
-
-    public BusinessException(Integer code) {
-        this.code = code;
+    public BusinessException(ErrorCodeAndMessage error) {
+        this.error = error;
     }
 
-    private BusinessException(Integer code, String message) {
-        this.message = message;
-        this.code = code;
+    public BusinessException(Integer errorCode, String errorMessage, String data) {
+        this.error = ErrorCodeAndMessage.create(errorCode, errorMessage);
+        this.data = data;
     }
 
-    public BusinessException() {
-        this(CodeAndMessage.ERROR);
-    }
-
-    public BusinessException(String message) {
-        this(CodeAndMessage.ERROR.getCode(), message);
-    }
-
-    public BusinessException(BusinessCodeAndMessage businessCodeAndMessage) {
-        this(businessCodeAndMessage.getCode(), businessCodeAndMessage.getMessage());
-    }
-
-    public BusinessException(BusinessCodeAndMessage businessCodeAndMessage, String message) {
-        this(businessCodeAndMessage.getCode(), message);
+    public BusinessException(ErrorCodeAndMessage error, Throwable cause, String data) {
+        super(JSONObject.toJSONString(error), cause);
+        this.data = data;
     }
 }

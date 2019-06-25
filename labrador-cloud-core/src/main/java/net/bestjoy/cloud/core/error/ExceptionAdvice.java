@@ -1,8 +1,8 @@
-package net.bestjoy.cloud.error.handle;
+package net.bestjoy.cloud.core.error;
 
-import net.bestjoy.cloud.core.bean.CodeAndMessage;
 import net.bestjoy.cloud.core.bean.Result;
 import net.bestjoy.cloud.error.bean.BusinessException;
+import net.bestjoy.cloud.error.bean.Errors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,7 @@ public class ExceptionAdvice {
     public Result handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e) {
         log.error("请求参数错误", e);
-        return new Result(CodeAndMessage.ILLEGAL_ARGUMENT);
+        return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,7 +49,7 @@ public class ExceptionAdvice {
     @ResponseBody
     public Result handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         log.error("参数解析失败", e);
-        return new Result(CodeAndMessage.ILLEGAL_ARGUMENT.getCode(), "参数解析错误");
+        return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -62,7 +62,7 @@ public class ExceptionAdvice {
         String field = error.getField();
         String code = error.getDefaultMessage();
         String message = String.format("%s:%s", field, code);
-        return new Result(CodeAndMessage.ILLEGAL_ARGUMENT.getCode(), "参数验证失败");
+        return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -75,7 +75,7 @@ public class ExceptionAdvice {
         String field = error.getField();
         String code = error.getDefaultMessage();
         String message = String.format("%s:%s", field, code);
-        return new Result(CodeAndMessage.ILLEGAL_ARGUMENT.getCode(), "参数绑定失败");
+        return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -86,7 +86,7 @@ public class ExceptionAdvice {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
         ConstraintViolation<?> violation = violations.iterator().next();
         String message = violation.getMessage();
-        return new Result(CodeAndMessage.ILLEGAL_ARGUMENT.getCode(), "请求数据与数据库表结构冲突");
+        return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -94,7 +94,7 @@ public class ExceptionAdvice {
     @ResponseBody
     public Result handle(ValidationException e) {
         log.error("参数验证失败", e);
-        return new Result(CodeAndMessage.ILLEGAL_ARGUMENT.getCode(), "参数验证失败");
+        return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
@@ -103,7 +103,7 @@ public class ExceptionAdvice {
     public Result handleHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException e) {
         log.error("不支持当前方法", e);
-        return new Result(CodeAndMessage.METHOD_NOT_ALLOWED);
+        return Result.fail(Errors.Sys.METHOD_NOT_ALLOWED_ERROR);
     }
 
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
@@ -111,7 +111,7 @@ public class ExceptionAdvice {
     @ResponseBody
     public Result handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
         log.error("不支持当前媒体类型", e);
-        return new Result(CodeAndMessage.UNSUPPORTED_MEDIA_TYPE);
+        return Result.fail(Errors.Sys.UNSUPPORTED_MEDIA_TYPE_ERROR);
     }
 
     /**
@@ -122,7 +122,7 @@ public class ExceptionAdvice {
     @ResponseBody
     public Result handleServiceException(BusinessException e) {
         log.error("业务异常", e);
-        return new Result(CodeAndMessage.ERROR.getCode(), e.getMessage());
+        return Result.fail(e.getError());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -130,6 +130,6 @@ public class ExceptionAdvice {
     @ResponseBody
     public Result handleException(Exception e) {
         log.error("系统运行异常", e);
-        return new Result(CodeAndMessage.ERROR);
+        return Result.fail(Errors.Sys.SYS_ERROR);
     }
 }
