@@ -1,81 +1,105 @@
 package net.bestjoy.cloud.core.bean;
 
+import lombok.Data;
+import lombok.ToString;
+import net.bestjoy.cloud.error.bean.CodeAndMessage;
+import net.bestjoy.cloud.error.bean.ErrorCodeAndMessage;
+
 import java.io.Serializable;
 
-/** 业务返回值封装 - 用于接口层 */
+/**
+ * 业务返回值封装 - 用于接口层
+ */
+@Data
+@ToString
 public final class Result<T> implements Serializable {
-  /** 业务返回值编码 */
-  private Integer code;
-  /** 提示信息 */
-  private String message;
-  /** 当前时间 */
-  private long timestamp;
 
-  /** 业务返回值 */
-  private T result;
+    private final static Integer SUCCESS = 100000;
 
-  public Result(Integer code, String message, T result) {
-    this.code = code;
-    this.timestamp = System.currentTimeMillis();
-    this.message = message;
-    this.result = result;
-  }
+    /**
+     * 业务返回值编码
+     * 统一code长度6位
+     */
+    private Integer code;
+    /**
+     * 提示信息
+     */
+    private String message;
+    /**
+     * 当前时间
+     */
+    private long timestamp;
+    /**
+     * 用于追踪链路
+     */
+    private String traceId;
+    /**
+     * 扩展信息
+     */
+    private String extInfo;
 
-  public Result(Integer code, String message) {
-    this.code = code;
-    this.timestamp = System.currentTimeMillis();
-    this.message = message;
-    this.result = null;
-  }
+    /**
+     * 业务返回值
+     */
+    private T result;
 
-  public Result(BusinessCodeAndMessage businessCodeAndMessage, T result) {
-    this(businessCodeAndMessage.getCode(), businessCodeAndMessage.getMessage(), result);
-  }
+    public Result(Integer code, String message, T result) {
+        this.code = code;
+        this.timestamp = System.currentTimeMillis();
+        this.message = message;
+        this.result = result;
+    }
 
-  public Result(T result) {
-    this(CodeAndMessage.OK, result);
-  }
+    public Result(Integer code, String message) {
+        this.code = code;
+        this.timestamp = System.currentTimeMillis();
+        this.message = message;
+        this.result = null;
+    }
 
-  public Result(BusinessCodeAndMessage businessCodeAndMessage) {
-    this(businessCodeAndMessage, null);
-  }
+    public Result(CodeAndMessage codeAndMessage, T result) {
+        this(codeAndMessage.getCode(), codeAndMessage.getMessage(), result);
+    }
 
-  public Result() {
-    this(CodeAndMessage.OK, null);
-  }
+    public Result(CodeAndMessage codeAndMessage) {
+        this(codeAndMessage, null);
+    }
 
-  public Integer getCode() {
-    return code;
-  }
+    /**
+     * 默认返回成功
+     *
+     * @param result
+     * @param <T>
+     * @return
+     */
+    public static <T> Result success(T result) {
+        return new Result(SUCCESS, null, result);
+    }
 
-  public String getMessage() {
-    return message;
-  }
+    /***
+     * 默认返回成功
+     * @return
+     */
+    public static Result success() {
+        return new Result(SUCCESS, null);
+    }
 
-  public long getTimestamp() {
-    return timestamp;
-  }
+    /***
+     * 返回失败
+     * @param errorCode  错误码
+     * @param msg  错误信息
+     * @return
+     */
+    public static Result fail(Integer errorCode, String msg) {
+        return new Result(errorCode, msg);
+    }
 
-  public Object getResult() {
-    return result;
-  }
-
-  public void setResult(T result) {
-    this.result = result;
-  }
-
-  @Override
-  public String toString() {
-    return "Result{"
-        + "code="
-        + code
-        + ", message='"
-        + message
-        + '\''
-        + ", timestamp="
-        + timestamp
-        + ", result="
-        + result
-        + '}';
-  }
+    /***
+     * 返回失败
+     * @param error
+     * @return
+     */
+    public static Result fail(ErrorCodeAndMessage error) {
+        return fail(error.getCode(), error.getMessage());
+    }
 }

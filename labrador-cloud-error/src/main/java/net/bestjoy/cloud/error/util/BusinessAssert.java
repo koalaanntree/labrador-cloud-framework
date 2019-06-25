@@ -1,6 +1,8 @@
-package net.bestjoy.cloud.error.bean;
+package net.bestjoy.cloud.error.util;
 
-import net.bestjoy.cloud.core.bean.CodeAndMessage;
+import net.bestjoy.cloud.error.bean.BusinessException;
+import net.bestjoy.cloud.error.bean.BusinessUrns;
+import net.bestjoy.cloud.error.bean.Errors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -398,8 +400,8 @@ public final class BusinessAssert {
      */
     public static void throwIllegalArgumentException(String message) {
         if (StringUtils.isNotBlank(message)) {
-            throw new BusinessException(CodeAndMessage.ILLEGAL_ARGUMENT, message);
+            throw new BusinessException(Errors.Biz.ILLEGAL_ARGUMENT_ERROR, message);
         }
-        throw new BusinessException(CodeAndMessage.ILLEGAL_ARGUMENT);
+        throw new BusinessException(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 }

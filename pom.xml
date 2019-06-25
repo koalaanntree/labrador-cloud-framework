@@ -38,6 +38,7 @@
         <junit.version>4.12</junit.version>
         <javax-servlet-api>3.0</javax-servlet-api>
         <slf4j-api.version>1.7.25</slf4j-api.version>
+        <fast-json.version>1.2.56</fast-json.version>
 
 
         <!-- Maven Plugin Versions -->
@@ -106,6 +107,13 @@
                 <version>${spring-cloud-gateway.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fast-json.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
