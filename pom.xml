@@ -13,6 +13,7 @@
         <module>labrador-cloud-core</module>
         <module>labrador-cloud-web</module>
         <module>labrador-cloud-dependencies</module>
+        <module>labrador-cloud-jdbc</module>
     </modules>
 
     <name>labrador-cloud-framework</name>
