@@ -16,18 +16,11 @@
 
     <properties>
         <mybatis.plus.version>3.0.6</mybatis.plus.version>
-        <lombok.version>1.18.2</lombok.version>
         <mysql.version>5.1.44</mysql.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
