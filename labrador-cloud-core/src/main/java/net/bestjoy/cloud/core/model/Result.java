@@ -1,4 +1,4 @@
-package net.bestjoy.cloud.web.bean;
+package net.bestjoy.cloud.core.model;
 
 import lombok.Data;
 import lombok.ToString;
