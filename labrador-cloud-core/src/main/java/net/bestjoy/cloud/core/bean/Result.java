@@ -1,9 +1,9 @@
 package net.bestjoy.cloud.core.bean;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.bestjoy.cloud.error.bean.CodeAndMessage;
-import net.bestjoy.cloud.error.bean.ErrorCodeAndMessage;
+import net.bestjoy.cloud.error.bean.*;
 
 import java.io.Serializable;
 
@@ -12,6 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
+@NoArgsConstructor
 public final class Result<T> implements Serializable {
 
     private final static Integer SUCCESS = 100000;
@@ -82,6 +83,30 @@ public final class Result<T> implements Serializable {
      */
     public static Result success() {
         return new Result(SUCCESS, null);
+    }
+
+    /***
+     * 是否返回成功结果
+     * @param result
+     * @return
+     */
+    public static boolean isSuccess(Result result) {
+        return (result != null && SUCCESS.equals(result.code)) ? true : false;
+    }
+
+    /**
+     * 检查是否发生异常
+     *
+     * @param result
+     */
+    public static void checkErrorResponse(Result result) {
+        if (result == null) {
+            throw new SysException(Errors.Sys.SERVER_NOT_RESPONSE_ERROR);
+        }
+
+        if (!result.isSuccess(result)) {
+            throw new BusinessException(result.getCode(), result.getMessage(), null);
+        }
     }
 
     /***

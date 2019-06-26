@@ -15,7 +15,7 @@ public class SysException extends RuntimeException {
     /**
      * 异常对象
      */
-    private CodeAndMessage error;
+    private ErrorCodeAndMessage error;
 
 
     public SysException(ErrorCodeAndMessage error, Throwable cause) {

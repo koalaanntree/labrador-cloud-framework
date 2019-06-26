@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <artifactId>labrador-cloud-dependencies</artifactId>
+    <groupId>net.bestjoy</groupId>
 
     <properties>
         <mybatis.plus.version>3.0.6</mybatis.plus.version>
@@ -50,10 +51,19 @@
                 <artifactId>labrador-cloud-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>net.bestjoy</groupId>
                 <artifactId>labrador-cloud-error</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bestjoy</groupId>
+                <artifactId>labrador-cloud-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bestjoy</groupId>
+                <artifactId>labrador-cloud-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
