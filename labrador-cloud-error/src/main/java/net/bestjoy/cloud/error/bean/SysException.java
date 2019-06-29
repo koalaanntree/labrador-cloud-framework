@@ -22,7 +22,11 @@ public class SysException extends RuntimeException {
         super(JSONObject.toJSONString(error), cause);
     }
 
-    public SysException(Integer errorCode, String errorMessage) {
+    public SysException(String errorCode, String errorMessage) {
         this.error = ErrorCodeAndMessage.create(errorCode, errorMessage);
+    }
+
+    public SysException(ErrorCodeAndMessage error, String errorMessage) {
+        this.error = ErrorCodeAndMessage.create(error.getCode(), errorMessage);
     }
 }

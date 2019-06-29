@@ -16,6 +16,9 @@
         <module>labrador-cloud-eureka</module>
         <module>labrador-cloud-web</module>
         <module>labrador-cloud-feign</module>
+        <module>labrador-cloud-security</module>
+        <module>labrador-cloud-logger</module>
+        <module>labrador-cloud-cache</module>
     </modules>
 
     <name>labrador-cloud-framework</name>

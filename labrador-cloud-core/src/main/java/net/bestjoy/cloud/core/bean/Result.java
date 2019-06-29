@@ -15,13 +15,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 public final class Result<T> implements Serializable {
 
-    private final static Integer SUCCESS = 100000;
+    private final static String SUCCESS = "100000";
 
     /**
      * 业务返回值编码
      * 统一code长度6位
      */
-    private Integer code;
+    private String code;
     /**
      * 提示信息
      */
@@ -44,14 +44,14 @@ public final class Result<T> implements Serializable {
      */
     private T result;
 
-    public Result(Integer code, String message, T result) {
+    public Result(String code, String message, T result) {
         this.code = code;
         this.timestamp = System.currentTimeMillis();
         this.message = message;
         this.result = result;
     }
 
-    public Result(Integer code, String message) {
+    public Result(String code, String message) {
         this.code = code;
         this.timestamp = System.currentTimeMillis();
         this.message = message;
@@ -115,7 +115,7 @@ public final class Result<T> implements Serializable {
      * @param msg  错误信息
      * @return
      */
-    public static Result fail(Integer errorCode, String msg) {
+    public static Result fail(String errorCode, String msg) {
         return new Result(errorCode, msg);
     }
 

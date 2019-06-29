@@ -25,7 +25,7 @@ public class BusinessException extends RuntimeException {
         this.error = error;
     }
 
-    public BusinessException(Integer errorCode, String errorMessage, String data) {
+    public BusinessException(String errorCode, String errorMessage, String data) {
         this.error = ErrorCodeAndMessage.create(errorCode, errorMessage);
         this.data = data;
     }

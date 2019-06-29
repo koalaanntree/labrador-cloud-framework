@@ -8,7 +8,7 @@ package net.bestjoy.cloud.error.bean;
 public class ErrorCodeAndMessage extends CodeAndMessage {
 
     public static ErrorCodeAndMessage create(
-            Integer errorCode, String errorMessage) {
+            String errorCode, String errorMessage) {
 
         ErrorCodeAndMessage errorCodeAndMessage = new ErrorCodeAndMessage();
         errorCodeAndMessage.setCode(errorCode);
