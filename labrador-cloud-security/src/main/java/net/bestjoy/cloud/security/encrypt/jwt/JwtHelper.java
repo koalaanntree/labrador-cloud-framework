@@ -45,7 +45,8 @@ public class JwtHelper {
      * @param claimsMap   扩展
      * @return
      */
-    public String buildJwtToken(String subject, Map<String, Object> claimsMap) {
+    public String buildJwtToken(
+            String subject, Map<String, Object> claimsMap, Integer expireInterval) {
 
         JwtBuilder builder = Jwts.builder().setSubject(subject);
         //签发者
@@ -64,7 +65,9 @@ public class JwtHelper {
         //签发时间
         builder.setIssuedAt(now);
         //过期时间
-        builder.setExpiration(Dates.addMinutes(new Date(), securityProperties.getTokenExpireInterval()));
+        if (expireInterval > 0) {
+            builder.setExpiration(Dates.addMinutes(new Date(), expireInterval));
+        }
         //todo  加密
         return builder.compact();
     }
