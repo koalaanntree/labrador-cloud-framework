@@ -13,9 +13,9 @@ public class SecurityProperties {
 
     /***
      * token过期interval，单位分钟
-     * 默认30分钟
+     * 默认1天
      */
-    private Integer tokenExpireInterval = 30;
+    private Integer tokenExpireInterval = 24 * 60;
 
     /***
      * refresh token过期interval，单位分钟
