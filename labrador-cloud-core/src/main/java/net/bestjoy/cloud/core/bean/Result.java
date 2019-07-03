@@ -110,6 +110,17 @@ public final class Result<T> implements Serializable {
     }
 
     /***
+     * 解析result
+     * @param result
+     * @param <T>
+     * @return
+     */
+    public static <T> T parseResult(Result<T> result) {
+        checkErrorResponse(result);
+        return result.getResult();
+    }
+
+    /***
      * 返回失败
      * @param errorCode  错误码
      * @param msg  错误信息

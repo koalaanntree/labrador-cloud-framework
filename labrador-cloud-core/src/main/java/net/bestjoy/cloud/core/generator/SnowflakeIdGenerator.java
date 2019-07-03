@@ -1,12 +1,9 @@
 package net.bestjoy.cloud.core.generator;
 
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Random;
 
 
-@Slf4j
 public class SnowflakeIdGenerator {
 
     private long workerId;
@@ -85,6 +82,12 @@ public class SnowflakeIdGenerator {
 
     protected long timeGen() {
         return System.currentTimeMillis();
+    }
+
+
+    public static void main (String[] args) {
+        IDGenerator<String> idGenerator = IDGenerator.SNOW_FLAKE_STRING;
+        System.out.println(idGenerator.generate());
     }
 
 }
