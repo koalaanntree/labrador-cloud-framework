@@ -17,10 +17,22 @@
     <properties>
         <mybatis.plus.version>3.0.6</mybatis.plus.version>
         <mysql.version>5.1.44</mysql.version>
+        <mybatis.version>3.4.6</mybatis.version>
+        <mybatis.spring.boot.starter>1.1.1</mybatis.spring.boot.starter>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.spring.boot.starter}</version>
+            </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -72,6 +84,11 @@
             <dependency>
                 <groupId>net.bestjoy</groupId>
                 <artifactId>labrador-cloud-cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bestjoy</groupId>
+                <artifactId>labrador-cloud-task</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
