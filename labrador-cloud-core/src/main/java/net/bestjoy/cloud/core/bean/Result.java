@@ -9,6 +9,8 @@ import java.io.Serializable;
 
 /**
  * 业务返回值封装 - 用于接口层
+ *
+ * @author ray
  */
 @Data
 @ToString
@@ -104,7 +106,7 @@ public final class Result<T> implements Serializable {
             throw new SysException(Errors.Sys.SERVER_NOT_RESPONSE_ERROR);
         }
 
-        if (!result.isSuccess(result)) {
+        if (!Result.isSuccess(result)) {
             throw new BusinessException(result.getCode(), result.getMessage(), null);
         }
     }

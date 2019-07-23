@@ -91,6 +91,11 @@
                 <artifactId>labrador-cloud-task</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.bestjoy</groupId>
+                <artifactId>labrador-cloud-mq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

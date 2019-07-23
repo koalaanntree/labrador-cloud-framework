@@ -20,6 +20,7 @@
         <module>labrador-cloud-logger</module>
         <module>labrador-cloud-cache</module>
         <module>labrador-cloud-task</module>
+        <module>labrador-cloud-mq</module>
     </modules>
 
     <name>labrador-cloud-framework</name>

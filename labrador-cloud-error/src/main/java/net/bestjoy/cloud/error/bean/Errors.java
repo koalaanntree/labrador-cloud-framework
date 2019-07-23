@@ -14,6 +14,7 @@ public interface Errors {
         ErrorCodeAndMessage ARGS_NOT_EMPTY_ERROR = ErrorCodeAndMessage.create("000000", "请求参数不能为空");
         ErrorCodeAndMessage ILLEGAL_ARGUMENT_ERROR = ErrorCodeAndMessage.create("000001", "请求参数非法");
         ErrorCodeAndMessage ACCESS_DENIED = ErrorCodeAndMessage.create("000002", "拒绝访问");
+        ErrorCodeAndMessage EXCEL_RESOLVE_ERROR = ErrorCodeAndMessage.create("000003", "excel解析异常");
     }
 
     /***
