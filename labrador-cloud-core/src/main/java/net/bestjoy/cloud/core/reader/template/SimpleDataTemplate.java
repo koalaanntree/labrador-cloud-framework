@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @ToString
 @NoArgsConstructor
-public class SimpleDataTemplate<T> {
+public final class SimpleDataTemplate {
     /**
      * 起始行，默认0开始
      */
@@ -31,7 +31,7 @@ public class SimpleDataTemplate<T> {
      */
     private List<DataDefine> dataDefines;
 
-    public SimpleDataTemplate(Class<T> tClass) {
+    public SimpleDataTemplate(Class tClass) {
         Field[] fields = tClass.getDeclaredFields();
 
         List<DataDefine> dataDefines = new ArrayList<>();

@@ -7,11 +7,11 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.reader.enums.ExcelVersionEnum;
 import net.bestjoy.cloud.core.reader.template.SimpleDataTemplate;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -22,18 +22,17 @@ import java.util.Map;
 /***
  * 简单读取excel文件里的数据
  *
- * @param <T> 转换的对象
  *
  * @author ray
  */
 @Slf4j
 @RequiredArgsConstructor
-public class SimpleDataExcelReader<T> extends ExcelReader implements DataReader<T> {
+public class SimpleDataExcelReader extends ExcelReader implements DataReader {
     /***
      * 数据模板
      */
     @NonNull
-    private SimpleDataTemplate<T> simpleDataTemplate;
+    private SimpleDataTemplate simpleDataTemplate;
 
     public SimpleDataExcelReader(SimpleDataTemplate simpleDataTemplate, InputStream inputStream, ExcelVersionEnum excelVersion) {
         this(simpleDataTemplate);
@@ -71,7 +70,7 @@ public class SimpleDataExcelReader<T> extends ExcelReader implements DataReader<
     }
 
     @Override
-    public List<T> resolveToBean(Class<T> clazz) {
+    public <T> List<T> resolveToBean(Class<T> clazz) {
         List<Map<String, Object>> list = resolve();
 
         if (CollectionUtils.isEmpty(list)) {

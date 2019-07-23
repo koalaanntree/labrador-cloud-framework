@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author ray
  */
-public interface DataReader<T> {
+public interface DataReader {
     /***
      * 解析为map
      * @return
@@ -20,5 +20,5 @@ public interface DataReader<T> {
      * @param clazz
      * @return
      */
-    List<T> resolveToBean(Class<T> clazz);
+    <T> List<T> resolveToBean(Class<T> clazz);
 }

@@ -25,12 +25,12 @@ public class ExcelReaderTest {
     public void test() {
         FileInputStream fileInputStream = new FileInputStream(new File("D:\\test.xlsx"));
 
-        SimpleDataTemplate<TestDto> simpleTemplate = new SimpleDataTemplate<>(TestDto.class);
+        SimpleDataTemplate simpleTemplate = new SimpleDataTemplate(TestDto.class);
         simpleTemplate.setStartRow(1);
         simpleTemplate.setStartColumn(1);
 
-        SimpleDataExcelReader<TestDto> simpleExcelReader =
-                new SimpleDataExcelReader<>(simpleTemplate, fileInputStream, ExcelVersionEnum.OFFICE_2007U);
+        SimpleDataExcelReader simpleExcelReader =
+                new SimpleDataExcelReader(simpleTemplate, fileInputStream, ExcelVersionEnum.OFFICE_2007U);
 
         List<TestDto> list = simpleExcelReader.resolveToBean(TestDto.class);
 
