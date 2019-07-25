@@ -1,7 +1,10 @@
 package net.bestjoy.cloud.web.config;
 
 import lombok.extern.slf4j.Slf4j;
+import net.bestjoy.cloud.logger.config.WebLoggerAutoConfiguration;
+import net.bestjoy.cloud.logger.filter.TraceLoggerContextFilter;
 import net.bestjoy.cloud.web.error.GlobalExceptionHandler;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +22,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @Import(GlobalExceptionHandler.class)
 @EnableConfigurationProperties({WebProperties.class})
+@ImportAutoConfiguration(classes = {WebLoggerAutoConfiguration.class})
 public class WebAutoConfiguration {
 
     private final WebProperties webProperties;

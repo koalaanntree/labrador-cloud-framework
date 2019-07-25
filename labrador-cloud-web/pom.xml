@@ -26,6 +26,12 @@
 
         <dependency>
             <groupId>net.bestjoy</groupId>
+            <artifactId>labrador-cloud-logger</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bestjoy</groupId>
             <artifactId>labrador-cloud-core</artifactId>
             <version>${project.version}</version>
         </dependency>
