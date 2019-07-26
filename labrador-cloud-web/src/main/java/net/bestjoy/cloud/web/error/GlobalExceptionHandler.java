@@ -53,7 +53,7 @@ public class GlobalExceptionHandler implements ErrorController {
 
     @ExceptionHandler(Throwable.class)
     public Object throwableHandler(Throwable cause) {
-        return Result.fail(Errors.Sys.SYS_ERROR.getCode(), cause.getMessage());
+        return Result.fail(Errors.Sys.SYS_ERROR.getCode(), cause.toString());
     }
 
 }

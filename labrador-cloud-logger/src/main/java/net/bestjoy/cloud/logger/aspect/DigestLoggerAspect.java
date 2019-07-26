@@ -5,6 +5,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.bean.Result;
 import net.bestjoy.cloud.core.util.ParamsUtil;
+import net.bestjoy.cloud.error.bean.BusinessException;
+import net.bestjoy.cloud.error.bean.Errors;
+import net.bestjoy.cloud.error.bean.SysException;
 import net.bestjoy.cloud.logger.context.LoggerContext;
 import net.bestjoy.cloud.logger.util.LoggerUtils;
 import org.aspectj.lang.JoinPoint;
@@ -20,35 +23,49 @@ import org.aspectj.lang.reflect.CodeSignature;
 @Aspect
 @Slf4j
 public class DigestLoggerAspect {
+
+    private long begin = 0;
+
     /***
      * 对所有的controller层进行拦截
+     *
+     * todo  去掉 error handle
      */
-    @Pointcut("execution(public * net..*Controller.*(..))")
-    public void loggerControllerNet() {
+    @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
+    public void loggerRestController() {
+
     }
 
-    @Pointcut("execution(public * com..*Controller.*(..))")
-    public void loggerControllerCom() {
+    @Pointcut("@within(org.springframework.stereotype.Controller) && @within(org.springframework.web.bind.annotation.ResponseBody)")
+    public void loggerController() {
+
+    }
+
+    @Pointcut("execution(* net.bestjoy.cloud.web.error.GlobalExceptionHandler.*(..))")
+    public void excludeController() {
+
     }
 
     //todo 添加注解支持
 
     @SneakyThrows
-    @Around("loggerControllerNet() || loggerControllerCom()")
+    @Around("!excludeController() && (loggerRestController() || loggerController())")
     public Object around(ProceedingJoinPoint joinPoint) {
-        long begin = System.currentTimeMillis();
+        begin = System.currentTimeMillis();
         //记录请求参数
         LoggerContext.setArgs(paramsToString(joinPoint));
         //todo 记录业务描述，注解支持，如果没有添加注解，为方法名
-        LoggerContext.setBizDescription(joinPoint.getSignature().getDeclaringTypeName());
-        //记录方法耗时
-        LoggerContext.setTimeCost(System.currentTimeMillis() - begin);
+        LoggerContext.setBizDescription(joinPoint.getSignature().getName());
+
         return joinPoint.proceed();
     }
 
-    @AfterReturning(value = "loggerControllerNet() || loggerControllerCom()", returning = "rtv")
+    @AfterReturning(value = "!excludeController() && (loggerRestController() || loggerController())", returning = "rtv")
     public void after(JoinPoint joinPoint, Object rtv) {
         try {
+            //记录方法耗时
+            LoggerContext.setTimeCost(System.currentTimeMillis() - begin);
+
             if (rtv instanceof Result) {
                 Result result = (Result) rtv;
                 //记录结果码
@@ -57,10 +74,46 @@ public class DigestLoggerAspect {
 
             //记录返回结果
             LoggerContext.setReturnResult(JSONObject.toJSONString(rtv));
-            //记录返回结果类型
+            //输出日志文件
             LoggerUtils.sendBizDigestLogger("");
         } catch (Exception e) {
             log.warn("记录日志出现异常");
+            throw e;
+        } finally {
+            LoggerContext.clear();
+        }
+    }
+
+    @AfterThrowing(value = "!excludeController() && (loggerRestController() || loggerController())", throwing = "exception")
+    public void afterThrowing(JoinPoint joinPoint, Exception exception) {
+        try {
+            //记录方法耗时
+            LoggerContext.setTimeCost(System.currentTimeMillis() - begin);
+
+            String resultCode = Errors.Sys.SYS_ERROR.getCode();
+            String result = "";
+            if (exception instanceof BusinessException) {
+                BusinessException bizException = (BusinessException) exception;
+                resultCode = bizException.getError().getCode();
+                result = JSONObject.toJSONString(Result.fail(bizException.getError()));
+            } else if (exception instanceof SysException) {
+                SysException sysException = (SysException) exception;
+                resultCode = sysException.getError().getCode();
+                result = JSONObject.toJSONString(Result.fail(sysException.getError()));
+            } else {
+                result = JSONObject.toJSONString(Result.fail(resultCode, exception.toString()));
+            }
+
+            //记录返回码
+            LoggerContext.setResultCode(resultCode);
+            //记录返回结果
+            LoggerContext.setReturnResult(result);
+
+            //输出日志文件
+            LoggerUtils.sendBizDigestLogger("");
+        } catch (Exception e) {
+            log.warn("记录日志出现异常");
+            throw e;
         } finally {
             LoggerContext.clear();
         }

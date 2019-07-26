@@ -59,15 +59,11 @@ public class ParamsUtil {
             return true;
         };
 
-        final ValueFilter valueFilter = (object, name, value) -> SensitiveInfoUtils.getJsonObject(value);
-
-        SerializeFilter[] filters = {propertyFilter, valueFilter};
-
         Map<String, Object> params = new HashMap<>();
         for (int i = 0; i < parameterNames.length; i++) {
             params.put(parameterNames[i], args[i]);
         }
 
-        return JSON.toJSONString(params, filters);
+        return JSON.toJSONString(params);
     }
 }
