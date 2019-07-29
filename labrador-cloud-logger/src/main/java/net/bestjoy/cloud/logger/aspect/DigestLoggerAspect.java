@@ -8,8 +8,8 @@ import net.bestjoy.cloud.core.util.ParamsUtil;
 import net.bestjoy.cloud.error.bean.BusinessException;
 import net.bestjoy.cloud.error.bean.Errors;
 import net.bestjoy.cloud.error.bean.SysException;
+import net.bestjoy.cloud.logger.Loggers;
 import net.bestjoy.cloud.logger.context.LoggerContext;
-import net.bestjoy.cloud.logger.util.LoggerUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -75,7 +75,7 @@ public class DigestLoggerAspect {
             //记录返回结果
             LoggerContext.setReturnResult(JSONObject.toJSONString(rtv));
             //输出日志文件
-            LoggerUtils.sendBizDigestLogger("");
+            Loggers.sendBizDigestLog();
         } catch (Exception e) {
             log.warn("记录日志出现异常");
             throw e;
@@ -110,7 +110,7 @@ public class DigestLoggerAspect {
             LoggerContext.setReturnResult(result);
 
             //输出日志文件
-            LoggerUtils.sendBizDigestLogger("");
+            Loggers.sendBizDigestLog();
         } catch (Exception e) {
             log.warn("记录日志出现异常");
             throw e;
