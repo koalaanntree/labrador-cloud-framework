@@ -223,12 +223,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <repository>
-            <id>best-joy</id>
-            <url>http://47.110.195.206/nexus/content/repositories/best-joy/</url>
-        </repository>
-    </distributionManagement>
-
 </project>
