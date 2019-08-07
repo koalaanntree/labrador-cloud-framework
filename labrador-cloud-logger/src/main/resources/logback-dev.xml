@@ -28,7 +28,7 @@
 
     <!--业务日志-->
     <appender name="BIZ_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="com.xiaoma.framework.logging.filter.MultiLevelFilter">
+        <filter class="net.bestjoy.cloud.logger.filter.MultiLevelFilter">
             <level>INFO,WARN</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
