@@ -15,9 +15,9 @@ import java.io.Serializable;
 @Data
 @ToString
 @NoArgsConstructor
-public final class Result<T> implements Serializable {
+public class Result<T> implements Serializable {
 
-    private final static String SUCCESS = "100000";
+    protected final static String SUCCESS = "100000";
 
     /**
      * 业务返回值编码
