@@ -1,0 +1,20 @@
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+  RetryableStatusCodes: 502 #不开启404重试，避免大量404请求攻击服务
+  ServerListRefreshInterval: 3000
+  OkToRetryOnAllOperations: false
+
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 10 #没心跳淘汰时间
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    registry-fetch-interval-seconds: 5
+    cache-refresh-executor-exponential-back-off-bound: 5
