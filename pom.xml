@@ -21,6 +21,7 @@
         <module>labrador-cloud-cache</module>
         <module>labrador-cloud-task</module>
         <module>labrador-cloud-mq</module>
+        <module>labrador-cloud-test</module>
     </modules>
 
     <name>labrador-cloud-framework</name>
@@ -48,7 +49,7 @@
         <javax-servlet-api>3.0</javax-servlet-api>
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <fast-json.version>1.2.56</fast-json.version>
-        <lombok.version>1.18.2</lombok.version>
+        <lombok.version>1.18.6</lombok.version>
 
         <!-- Maven Plugin Versions -->
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
