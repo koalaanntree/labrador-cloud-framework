@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface SwitchDS {
+public @interface DS {
     /**
      * 数据源名称
      *

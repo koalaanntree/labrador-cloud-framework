@@ -21,15 +21,25 @@ import java.util.Objects;
 @Slf4j
 public class DynamicDataSourceAspect {
 
-    @Before("@within(SwitchDS) || @annotation(SwitchDS)")
+    @Before("@within(net.bestjoy.cloud.datasource.dynamic.DS) || @annotation(net.bestjoy.cloud.datasource.dynamic.DS)")
     public void changeDataSource(JoinPoint joinPoint) {
         // 获取方法上的注解
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        SwitchDS annotation = method.getAnnotation(SwitchDS.class);
+        DS annotation = method.getAnnotation(DS.class);
 
         if (Objects.isNull(annotation)) {
             //方法上没有注解，获取类上的注解
-            annotation = joinPoint.getTarget().getClass().getAnnotation(SwitchDS.class);
+            annotation = joinPoint.getTarget().getClass().getAnnotation(DS.class);
+        }
+
+        if (Objects.isNull(annotation)) {
+            //获取接口上的注解
+            for (Class<?> cls : joinPoint.getTarget().getClass().getInterfaces()) {
+                annotation = cls.getAnnotation(DS.class);
+                if (annotation != null) {
+                    break;
+                }
+            }
         }
 
         if (Objects.isNull(annotation)) {
@@ -44,7 +54,7 @@ public class DynamicDataSourceAspect {
         }
     }
 
-    @After("@within(SwitchDS) || @annotation(SwitchDS)")
+    @After("@within(net.bestjoy.cloud.datasource.dynamic.DS) || @annotation(net.bestjoy.cloud.datasource.dynamic.DS)")
     public void clearDataSource() {
         DynamicDataSourceContext.clearDataSourceLookupKey();
     }
