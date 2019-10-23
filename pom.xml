@@ -22,6 +22,7 @@
         <module>labrador-cloud-task</module>
         <module>labrador-cloud-mq</module>
         <module>labrador-cloud-test</module>
+        <module>labrador-cloud-datasource</module>
     </modules>
 
     <name>labrador-cloud-framework</name>
