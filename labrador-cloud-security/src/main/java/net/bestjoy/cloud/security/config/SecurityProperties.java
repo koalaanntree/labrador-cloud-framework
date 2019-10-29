@@ -23,7 +23,30 @@ public class SecurityProperties {
      */
     private Integer refreshTokenExpireInterval = 30 * 24 * 60;
 
+    /**
+     * 是否开启jwt加密
+     */
+    private boolean jwtEnable = false;
+
+    /***
+     * 签发者
+     */
     private String jwtIssuer = "net.bestjoy";
 
+    /***
+     * 应用名称
+     */
     private String jwtAppName;
+
+    /***
+     * jwt加密串
+     */
+    private String jwtSignKey;
+
+    /***
+     * jwt加密类型
+     *
+     * @see sun.security.ssl.SignatureAndHashAlgorithm.SignatureAlgorithm
+     */
+    private String jwtSignType;
 }

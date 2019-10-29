@@ -3,6 +3,9 @@ package net.bestjoy.cloud.security.encrypt.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.bestjoy.cloud.core.util.Dates;
 import net.bestjoy.cloud.error.bean.Errors;
 import net.bestjoy.cloud.error.bean.SysException;
@@ -18,26 +21,11 @@ import java.util.Map;
  * jwt工具
  * @author ray
  */
+@RequiredArgsConstructor
 public class JwtHelper {
 
+    @NonNull
     private SecurityProperties securityProperties;
-
-    public JwtHelper() {
-    }
-
-    public JwtHelper(SecurityProperties securityProperties) {
-        this.securityProperties = securityProperties;
-    }
-
-    /**
-     * 加密串配置
-     *
-     * @return
-     */
-    private SecretKey generateKey() {
-        //todo
-        return null;
-    }
 
     /***
      * 构建token
@@ -68,8 +56,18 @@ public class JwtHelper {
         if (expireInterval > 0) {
             builder.setExpiration(Dates.addMinutes(new Date(), expireInterval));
         }
-        //todo  加密
+        //加密
+        builder.signWith(SignatureAlgorithm.valueOf(securityProperties.getJwtSignType()), securityProperties.getJwtSignKey());
         return builder.compact();
+    }
+
+    /***
+     * 是否已过期
+     * @param token
+     * @return
+     */
+    public boolean isExpiration(String token) {
+        return parseClaims(token).getExpiration().before(new Date());
     }
 
     /***
@@ -77,7 +75,7 @@ public class JwtHelper {
      * @param jwtToken
      * @return
      */
-    public Claims resovleClaims(String jwtToken) {
+    public Claims parseClaims(String jwtToken) {
         if (StringUtils.isEmpty(jwtToken)) {
             throw new SysException(Errors.Biz.ARGS_NOT_EMPTY_ERROR);
         }

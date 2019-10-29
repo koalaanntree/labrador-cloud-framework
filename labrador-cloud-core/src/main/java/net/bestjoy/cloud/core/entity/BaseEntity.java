@@ -15,12 +15,12 @@ import java.util.Date;
 @Data
 @ToString
 @Accessors(chain = true)
-public class BaseEntity {
+public class BaseEntity<PK> {
     /***
      * 主键id
      */
     @TableId(type = IdType.AUTO)
-    private Long id;
+    private PK id;
 
     /***
      * 创建时间

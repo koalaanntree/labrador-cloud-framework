@@ -16,8 +16,13 @@ public class SecurityAutoConfiguration {
 
     @Bean
     public JwtHelper jwtHelper(SecurityProperties securityProperties) {
-        Assert.notNull(securityProperties.getJwtAppName(), "jwt app name not provider");
+        if (!securityProperties.isJwtEnable()) {
+            return null;
+        }
 
+        Assert.notNull(securityProperties.getJwtAppName(), "jwt app name not provide");
+        Assert.notNull(securityProperties.getJwtSignKey(), "jwt sign key not provide");
+        Assert.notNull(securityProperties.getJwtSignType(), "jwt sign type not provide");
         return new JwtHelper(securityProperties);
     }
 }
