@@ -21,8 +21,8 @@ public class SecurityAutoConfiguration {
         }
 
         Assert.notNull(securityProperties.getJwtAppName(), "jwt app name not provide");
-        Assert.notNull(securityProperties.getJwtSignKey(), "jwt sign key not provide");
-        Assert.notNull(securityProperties.getJwtSignType(), "jwt sign type not provide");
+//        Assert.notNull(securityProperties.getJwtSignKey(), "jwt sign key not provide");
+//        Assert.notNull(securityProperties.getJwtSignType(), "jwt sign type not provide");
         return new JwtHelper(securityProperties);
     }
 }

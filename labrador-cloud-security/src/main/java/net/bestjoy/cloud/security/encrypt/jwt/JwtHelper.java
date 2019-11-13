@@ -1,9 +1,6 @@
 package net.bestjoy.cloud.security.encrypt.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.bestjoy.cloud.core.util.Dates;
@@ -40,7 +37,7 @@ public class JwtHelper {
         //签发者
         builder.setIssuer(securityProperties.getJwtIssuer());
 
-        if (StringUtils.isEmpty(securityProperties.getJwtAppName())) {
+        if (!StringUtils.isEmpty(securityProperties.getJwtAppName())) {
             //接受者
             builder.setAudience(securityProperties.getJwtAppName());
         }
@@ -56,8 +53,11 @@ public class JwtHelper {
         if (expireInterval > 0) {
             builder.setExpiration(Dates.addMinutes(new Date(), expireInterval));
         }
-        //加密
-        builder.signWith(SignatureAlgorithm.valueOf(securityProperties.getJwtSignType()), securityProperties.getJwtSignKey());
+        //todo 加密
+//        if (!StringUtils.isEmpty(securityProperties.getJwtSignType())
+//                && !StringUtils.isEmpty(securityProperties.getJwtSignKey())) {
+//            builder.signWith(SignatureAlgorithm.valueOf(securityProperties.getJwtSignType()), securityProperties.getJwtSignKey());
+//        }
         return builder.compact();
     }
 

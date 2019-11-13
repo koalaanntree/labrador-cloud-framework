@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration debug="false">
+<configuration debug="true">
     <!--需要根据业务修改-->
     <springProperty scope="context" name="APP_NAME" source="spring.application.name"/><!--应用名-->
     <springProperty scope="context" name="APP_VERSION" source="spring.application.version"/><!--应用版本-->
@@ -89,7 +89,7 @@
     </root>
 
     <!--全局日志-->
-    <root level="INFO" additivity="false">
+    <root level="DEBUG" additivity="false">
         <!--开发环境需要输出业务日志方便开发，测试、生产环境不需要-->
         <appender-ref ref="BIZ_LOG"/>
         <appender-ref ref="ERROR_LOG"/>
