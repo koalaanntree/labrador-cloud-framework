@@ -24,6 +24,10 @@ public class JwtHelper {
     @NonNull
     private SecurityProperties securityProperties;
 
+
+
+
+
     /***
      * 构建token
      * @param subject   userId 不能为空

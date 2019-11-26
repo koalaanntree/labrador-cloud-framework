@@ -4,6 +4,8 @@ import net.bestjoy.cloud.security.encrypt.jwt.JwtHelper;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.util.Assert;
 
 /***
@@ -12,7 +14,15 @@ import org.springframework.util.Assert;
  */
 @Configuration
 @EnableConfigurationProperties({SecurityProperties.class})
-public class SecurityAutoConfiguration {
+public class SecurityAutoConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/swagger-ui.html")
+                .antMatchers("/webjars/**")
+                .antMatchers("/v2/**")
+                .antMatchers("/swagger-resources/**");
+    }
 
     @Bean
     public JwtHelper jwtHelper(SecurityProperties securityProperties) {
