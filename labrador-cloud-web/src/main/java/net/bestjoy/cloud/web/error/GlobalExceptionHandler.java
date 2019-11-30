@@ -32,27 +32,32 @@ public class GlobalExceptionHandler implements ErrorController {
 
     @ExceptionHandler(SysException.class)
     public Object systemErrorHandler(SysException sysException) {
+        sysException.printStackTrace();
         return Result.fail(sysException.getError());
     }
 
     @ExceptionHandler(BusinessException.class)
     public Object bizErrorHandler(BusinessException businessException) {
+        businessException.printStackTrace();
         return Result.fail(businessException.getError());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public Object methodNotSupportedHandler(HttpRequestMethodNotSupportedException exception) {
+        exception.printStackTrace();
         return Result.fail(Errors.Sys.METHOD_NOT_ALLOWED_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Object notValidParameterHandler(MethodArgumentNotValidException exception) {
         //todo  参数打印
+        exception.printStackTrace();
         return Result.fail(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     @ExceptionHandler(Throwable.class)
     public Object throwableHandler(Throwable cause) {
+        cause.printStackTrace();
         return Result.fail(Errors.Sys.SYS_ERROR.getCode(), cause.toString());
     }
 
