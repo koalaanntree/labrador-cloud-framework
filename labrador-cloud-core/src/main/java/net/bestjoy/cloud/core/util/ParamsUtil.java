@@ -7,6 +7,8 @@ import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
 import net.bestjoy.cloud.core.sensitive.SensitiveInfoUtils;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +64,9 @@ public class ParamsUtil {
 
         Map<String, Object> params = new HashMap<>();
         for (int i = 0; i < parameterNames.length; i++) {
+            if (args[i] instanceof ServletRequest || args[i] instanceof ServletResponse) {
+                continue;
+            }
             params.put(parameterNames[i], args[i]);
         }
 
