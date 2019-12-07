@@ -59,7 +59,7 @@
         <gmavenplus-plugin.version>1.6</gmavenplus-plugin.version>
         <jacoco.version>0.8.3</jacoco.version>
 
-        <mybatis.plus.version>3.0.6</mybatis.plus.version>
+        <mybatis.plus.version>3.3.0</mybatis.plus.version>
         <mysql.version>5.1.44</mysql.version>
         <mybatis.version>3.4.6</mybatis.version>
         <mybatis.spring.boot.starter>1.1.1</mybatis.spring.boot.starter>
