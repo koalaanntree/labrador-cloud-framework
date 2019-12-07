@@ -40,7 +40,7 @@ public class SwaggerAutoConfiguration extends WebMvcConfigurationSupport {
     }
 
 
-    private ApiInfo apiInfo(SwaggerProperties properties) {
+    protected ApiInfo apiInfo(SwaggerProperties properties) {
         return new ApiInfoBuilder()
                 .title(properties.getTitle())
                 .description(properties.getDescription())
