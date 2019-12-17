@@ -9,9 +9,6 @@ import java.util.Date;
 
 /**
  * 日期工具类
- *
- * @author LarryYan
- * @date 2018/6/22 15:32
  */
 public class Dates {
 
