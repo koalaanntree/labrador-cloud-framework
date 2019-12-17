@@ -52,7 +52,7 @@ public class DigestLoggerAspect {
     @Around("!excludeController() && (loggerRestController() || loggerController())")
     public Object around(ProceedingJoinPoint joinPoint) {
         begin = System.currentTimeMillis();
-        //记录请求参数
+        //记录请求参数 todo 敏感参数encoding
         LoggerContext.setArgs(paramsToString(joinPoint));
         //todo 记录业务描述，注解支持，如果没有添加注解，为方法名
         LoggerContext.setBizDescription(joinPoint.getSignature().getName());

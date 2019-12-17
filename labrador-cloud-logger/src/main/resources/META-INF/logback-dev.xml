@@ -19,9 +19,9 @@
         </rollingPolicy>
         <encoder>
             <!--时间,日志级别,应用名,应用版本,traceid,spanId,
-            [(业务描述)(耗时)(结果码)(返回结果)(请求参数列表)]-->
+            [(业务描述)(请求参数列表)(结果码)(耗时)(返回结果)]-->
             <Pattern>
-                %d{yyyy/MM/dd-HH:mm:ss.SSS},%-5level,${APP_NAME},${APP_VERSION},%X{X-B3-TraceId},%X{X-B3-SpanId},[\(%X{BJ-BizDescription}\),\(%X{BJ-TimeCost}\),\(%X{BJ-ResultCode}\),\(%X{BJ-ReturnResult}\),\(%X{BJ-Args}\)]%n
+                %d{yyyy/MM/dd-HH:mm:ss.SSS},%-5level,${APP_NAME},${APP_VERSION},%X{X-B3-TraceId},%X{X-B3-SpanId},[\(%X{BJ-BizDescription}\),\(%X{BJ-Args}\),\(%X{BJ-ResultCode}\),\(%X{BJ-TimeCost}\),\(%X{BJ-ReturnResult}\)]%n
             </Pattern>
         </encoder>
     </appender>
