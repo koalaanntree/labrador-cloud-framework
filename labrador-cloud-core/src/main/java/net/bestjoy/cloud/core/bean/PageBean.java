@@ -1,5 +1,6 @@
 package net.bestjoy.cloud.core.bean;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -13,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-public class PageBean implements Serializable {
+public class PageBean<T> implements Serializable {
     /**
      * 起始页
      */
@@ -25,4 +26,8 @@ public class PageBean implements Serializable {
      */
     @ApiModelProperty(value = "每页显示个数", notes = "默认20")
     private Integer limit = 20;
+
+    public Page<T> getPage() {
+        return new Page<>(page, limit);
+    }
 }

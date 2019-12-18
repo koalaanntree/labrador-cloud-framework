@@ -76,14 +76,14 @@ public class Result<T> implements Serializable {
      * @return
      */
     public static <T> Result success(T result) {
-        return new Result(SUCCESS, null, result);
+        return new Result<>(SUCCESS, null, result);
     }
 
     /***
      * 默认返回成功
      * @return
      */
-    public static Result success() {
+    public static Result<?> success() {
         return new Result(SUCCESS, null);
     }
 
@@ -92,7 +92,7 @@ public class Result<T> implements Serializable {
      * @param result
      * @return
      */
-    public static boolean isSuccess(Result result) {
+    public static boolean isSuccess(Result<?> result) {
         return (result != null && SUCCESS.equals(result.code)) ? true : false;
     }
 
@@ -101,7 +101,7 @@ public class Result<T> implements Serializable {
      *
      * @param result
      */
-    public static void checkErrorResponse(Result result) {
+    public static void checkErrorResponse(Result<?> result) {
         if (result == null) {
             throw new SysException(Errors.Sys.SERVER_NOT_RESPONSE_ERROR);
         }

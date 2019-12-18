@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class PageData<T> {
      * @param total
      * @return
      */
-    public static PageData emptyResult(long current, long size, long total) {
+    public static PageData<?> emptyResult(long current, long size, long total) {
 
         return builderPageData(new ArrayList(), PageInfo.builder().current(current).total(total).size(size).build());
     }
@@ -53,19 +54,23 @@ public class PageData<T> {
      * 返回空
      * @return
      */
-    public static PageData emptyResult() {
+    public static PageData<?> emptyResult() {
         return emptyResult(0L, 0L, 0L);
     }
 
-    public static PageData buildResult(List records, long current, long size, long total) {
+    public static PageData<?> buildResult(List<?> records, long current, long size, long total) {
         return builderPageData(records, PageInfo.builder().current(current).total(total).size(size).build());
     }
 
-    public static PageData buildResult(Page page) {
+    public static PageData<?> buildResult(Page<?> page) {
         return page == null ? emptyResult() : buildResult(page.getRecords(), page.getCurrent(), page.getSize(), page.getTotal());
     }
 
-    public static PageData buildResult(IPage iPage) {
+    public static PageData<?> buildResult(IPage<?> iPage) {
         return iPage == null ? emptyResult() : buildResult(iPage.getRecords(), iPage.getCurrent(), iPage.getSize(), iPage.getTotal());
+    }
+
+    public static Result<PageData<?>> buildResultResponse(IPage<?> page) {
+        return Result.success(buildResult(page));
     }
 }
