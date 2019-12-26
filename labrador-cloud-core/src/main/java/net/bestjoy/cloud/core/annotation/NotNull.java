@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * @author ray
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
 public @interface NotNull {
     /***

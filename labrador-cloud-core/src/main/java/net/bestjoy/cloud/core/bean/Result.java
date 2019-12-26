@@ -87,15 +87,6 @@ public class Result<T> implements Serializable {
         return new Result(SUCCESS, null);
     }
 
-    /***
-     * 是否返回成功结果
-     * @param result
-     * @return
-     */
-    public static boolean isSuccess(Result<?> result) {
-        return (result != null && SUCCESS.equals(result.code)) ? true : false;
-    }
-
     /**
      * 检查是否发生异常
      *
@@ -106,7 +97,7 @@ public class Result<T> implements Serializable {
             throw new SysException(Errors.Sys.SERVER_NOT_RESPONSE_ERROR);
         }
 
-        if (!Result.isSuccess(result)) {
+        if (!result.isSuccess()) {
             throw new BusinessException(result.getCode(), result.getMessage(), null);
         }
     }
@@ -139,5 +130,13 @@ public class Result<T> implements Serializable {
      */
     public static Result fail(ErrorCodeAndMessage error) {
         return fail(error.getCode(), error.getMessage());
+    }
+
+    /***
+     * 是否返回成功结果
+     * @return
+     */
+    public boolean isSuccess() {
+        return SUCCESS.equals(code) ? true : false;
     }
 }
