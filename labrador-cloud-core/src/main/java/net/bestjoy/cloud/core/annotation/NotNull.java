@@ -7,9 +7,11 @@ import java.lang.annotation.*;
  * 需要 @NeedValidate 注解开启
  * @author ray
  */
+@Inherited//声明注解具有可继承性
 @Documented
-@Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Assert
 public @interface NotNull {
     /***
      * 关键字
