@@ -21,6 +21,7 @@ package net.bestjoy.cloud.web.util;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.bean.Result;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -147,6 +148,7 @@ public class WebUtil {
     public static void returnObjectResponse(HttpServletResponse response, Result result) {
         String responseJSONObject = JSONObject.toJSONString(result);
         response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = null;
         try {

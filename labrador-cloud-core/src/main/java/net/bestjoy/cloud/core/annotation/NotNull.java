@@ -5,6 +5,8 @@ import java.lang.annotation.*;
 /***
  * 判断参数是否为空
  * 需要 @NeedValidate 注解开启
+ *
+ * 可被继承
  * @author ray
  */
 @Inherited//声明注解具有可继承性

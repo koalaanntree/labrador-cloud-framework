@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 /***
  * 统一异常处理
- * 如果有其他子系统有其他实现类，自动注入会以此为首选
+ *
+ * 自定义需要继承
  * @author ray
  */
 @Primary
 @ControllerAdvice
 @ConditionalOnMissingBean(name = "exceptionHandler")
 @RestController
-public class GlobalExceptionHandler implements ErrorController {
+public class DefaultGlobalExceptionHandler implements ErrorController {
 
     @Override
     public String getErrorPath() {

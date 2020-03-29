@@ -41,7 +41,7 @@ public class DigestLoggerAspect {
 
     }
 
-    @Pointcut("execution(* net.bestjoy.cloud.web.error.GlobalExceptionHandler.*(..))")
+    @Pointcut("execution(* net.bestjoy.cloud.web.error.DefaultGlobalExceptionHandler.*(..))")
     public void excludeController() {
 
     }
