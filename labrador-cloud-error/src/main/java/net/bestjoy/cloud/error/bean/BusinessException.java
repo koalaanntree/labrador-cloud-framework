@@ -30,6 +30,10 @@ public class BusinessException extends RuntimeException {
         this.data = data;
     }
 
+    public BusinessException(String errorCode, String errorMessage) {
+        this.error = ErrorCodeAndMessage.create(errorCode, errorMessage);
+    }
+
     public BusinessException(ErrorCodeAndMessage error, Throwable cause, String data) {
         super(JSONObject.toJSONString(error), cause);
         this.data = data;

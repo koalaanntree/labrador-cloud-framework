@@ -18,6 +18,7 @@ import java.io.Serializable;
 public class Result<T> implements Serializable {
 
     protected final static String SUCCESS = "100000";
+    protected final static String SUCCESS_MSG = "SUCCESS";
 
     /**
      * 业务返回值编码
@@ -76,7 +77,7 @@ public class Result<T> implements Serializable {
      * @return
      */
     public static <T> Result success(T result) {
-        return new Result<>(SUCCESS, null, result);
+        return new Result<>(SUCCESS, SUCCESS_MSG, result);
     }
 
     /***
@@ -84,7 +85,7 @@ public class Result<T> implements Serializable {
      * @return
      */
     public static Result<?> success() {
-        return new Result(SUCCESS, null);
+        return new Result(SUCCESS, SUCCESS_MSG);
     }
 
     /**

@@ -19,7 +19,7 @@ public class PageBean<T> implements Serializable {
      * 起始页
      */
     @ApiModelProperty("页")
-    private Integer page = 1;
+    private Integer pageNum = 1;
 
     /***
      * 每页显示个数
@@ -28,6 +28,6 @@ public class PageBean<T> implements Serializable {
     private Integer limit = 20;
 
     public Page<T> getPage() {
-        return new Page<>(page, limit);
+        return new Page<>(pageNum, limit);
     }
 }
