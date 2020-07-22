@@ -14,7 +14,6 @@ import java.util.Map;
 /**
  * Bean工具类
  *
- * @date 2018/6/22 15:30
  */
 @Slf4j
 public final class BeanUtils {

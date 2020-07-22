@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
  * 业务断言,主要是进行一些空或者非空判断
  *
  * @author : joy lee
- * @date : 2018-12-28 21:54
  */
 public final class BusinessAssert {
     private static final Map<String, Pattern> PATTERNS = new ConcurrentHashMap<>();

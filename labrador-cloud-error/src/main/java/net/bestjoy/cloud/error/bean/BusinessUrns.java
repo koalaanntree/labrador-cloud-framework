@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
  * 业务URN，不能是UUID及纯数字
  *
  * @author : joy lee
- * @date : 2018-12-28 21:52
  */
 public final class BusinessUrns {
     private static final Pattern UUID = Pattern.compile("[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}");
