@@ -90,28 +90,20 @@ public class Result<T> implements Serializable {
 
     /**
      * 检查是否发生异常
-     *
-     * @param result
      */
-    public static void checkErrorResponse(Result<?> result) {
-        if (result == null) {
-            throw new SysException(Errors.Sys.SERVER_NOT_RESPONSE_ERROR);
-        }
-
-        if (!result.isSuccess()) {
-            throw new BusinessException(result.getCode(), result.getMessage(), null);
+    public void checkErrorResponse() {
+        if (!this.isSuccess()) {
+            throw new BusinessException(this.getCode(), this.getMessage(), null);
         }
     }
 
     /***
      * 解析result
-     * @param result
-     * @param <T>
      * @return
      */
-    public static <T> T parseResult(Result<T> result) {
-        checkErrorResponse(result);
-        return result.getResult();
+    public T parseResult() {
+        checkErrorResponse();
+        return this.getResult();
     }
 
     /***

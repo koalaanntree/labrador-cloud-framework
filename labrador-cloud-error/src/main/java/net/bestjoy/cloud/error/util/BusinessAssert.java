@@ -2,6 +2,7 @@ package net.bestjoy.cloud.error.util;
 
 import net.bestjoy.cloud.error.bean.BusinessException;
 import net.bestjoy.cloud.error.bean.BusinessUrns;
+import net.bestjoy.cloud.error.bean.ErrorCodeAndMessage;
 import net.bestjoy.cloud.error.bean.Errors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,10 @@ public final class BusinessAssert {
      * 必须为null
      */
     public static void isNull(Object value) {
-        isNull(value, null);
+        if (value == null) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -36,11 +40,31 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+
+    public static void isNull(Object value, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
+
+    public static void notNull(Object value, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value != null) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 不能为null
      */
     public static void notNull(Object value) {
-        notNull(value, null);
+
+        if (value != null) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -57,7 +81,10 @@ public final class BusinessAssert {
      * 必须为空字符串，或为null
      */
     public static void isEmpty(String value) {
-        isEmpty(value, null);
+        if (StringUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -70,11 +97,21 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void isEmpty(String value, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (StringUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 不能为空字符串，且不能为null
      */
     public static void notEmpty(String value) {
-        notEmpty(value, null);
+        if (!StringUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -87,11 +124,21 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void notEmpty(String value, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (!StringUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 空集合，或为null
      */
     public static void isEmpty(Collection<?> value) {
-        isEmpty(value, null);
+        if (CollectionUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -104,11 +151,21 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void isEmpty(Collection<?> value, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (CollectionUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 不能为空集合，且不能为null
      */
     public static void notEmpty(Collection<?> value) {
-        notEmpty(value, null);
+        if (!CollectionUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -121,11 +178,21 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void notEmpty(Collection<?> value, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (!CollectionUtils.isEmpty(value)) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 不能为空白字符串，且不能为null
      */
     public static void notBlank(String value) {
-        notBlank(value, null);
+        if (value != null && !value.trim().isEmpty()) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -138,11 +205,22 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void notBlank(String value, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value != null && !value.trim().isEmpty()) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 必须相等，或为null
      */
     public static void eq(Object value, Object that) {
-        eq(value, that, null);
+        if (value == null || value.equals(that)) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -155,11 +233,22 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void eq(Object value, Object that, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || value.equals(that)) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 必须不相等，或为null
      */
     public static void ne(Object value, Object that) {
-        ne(value, that, null);
+        if (value == null || !value.equals(that)) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -172,11 +261,22 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void ne(Object value, Object that, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || !value.equals(that)) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 必须小于，或为null
      */
     public static <T extends Comparable<T>> void lt(T value, T that) {
-        lt(value, that, null);
+        if (value == null || value.compareTo(that) < 0) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -190,11 +290,22 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static <T extends Comparable<T>> void lt(T value, T that, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || value.compareTo(that) < 0) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 必须小于或等于，或为null
      */
     public static <T extends Comparable<T>> void lte(T value, T that) {
-        lte(value, that, null);
+        if (value == null || value.compareTo(that) <= 0) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -208,11 +319,23 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static <T extends Comparable<T>> void lte(T value, T that, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || value.compareTo(that) <= 0) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 必须大于，或为null
      */
     public static <T extends Comparable<T>> void gt(T value, T that) {
-        gt(value, that, null);
+        if (value == null || value.compareTo(that) > 0) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -226,11 +349,23 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static <T extends Comparable<T>> void gt(T value, T that, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || value.compareTo(that) > 0) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 必须大于或等于，或为null
      */
     public static <T extends Comparable<T>> void gte(T value, T that) {
-        gte(value, that, null);
+        if (value == null || value.compareTo(that) >= 0) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -244,12 +379,24 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static <T extends Comparable<T>> void gte(T value, T that, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || value.compareTo(that) >= 0) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 必须在最大最小值之间（含），或为null
      */
     public static <T extends Comparable<T>> void between(T value, T min,
                                                          T max) {
-        between(value, min, max, null);
+        if (value == null || (value.compareTo(min) >= 0 && value.compareTo(max) <= 0)) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -264,11 +411,23 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static <T extends Comparable<T>> void between(T value, T min, T max, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || (value.compareTo(min) >= 0 && value.compareTo(max) <= 0)) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 字符串长度必须小于最大值（含），或为null
      */
     public static void maxlength(String value, int max) {
-        maxlength(value, max, null);
+        if (value == null || value.length() <= max) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -281,11 +440,23 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void maxlength(String value, int max, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || value.length() <= max) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 字符串长度必须大于最小值（含），或为null
      */
     public static void minlength(String value, int min) {
-        minlength(value, min, null);
+        if (value == null || value.length() >= min) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -298,11 +469,21 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void minlength(String value, int min, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || value.length() >= min) {
+            return;
+        }
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 字符串长度必须在最大值最小值之间（含），或为null
      */
     public static void length(String value, int min, int max) {
-        length(value, min, max, null);
+        if (value == null || (min <= value.length() && value.length() <= max)) {
+            return;
+        }
+        throwIllegalArgumentException();
     }
 
     /**
@@ -315,11 +496,23 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void length(String value, int min, int max, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || (min <= value.length() && value.length() <= max)) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 值必须在给定集合中，或为null
      */
     public static void in(Object value, Collection<?> collection) {
-        in(value, collection, null);
+        if (value == null || collection.contains(value)) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -333,11 +526,23 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void in(Object value, Collection<?> collection, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || collection.contains(value)) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     /**
      * 字符串必须匹配正则表达式，或为null
      */
     public static void pattern(String value, Pattern regex) {
-        pattern(value, regex, null);
+        if (value == null || regex.matcher(value).matches()) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -354,7 +559,19 @@ public final class BusinessAssert {
      * 字符串必须匹配正则表达式，或为null
      */
     public static void pattern(String value, String regex) {
-        pattern(value, regex, null);
+        Pattern compiled = PATTERNS.get(regex);
+        if (compiled == null) {
+            PATTERNS.put(regex, compiled = Pattern.compile(regex));
+        }
+        pattern(value, compiled);
+    }
+
+    public static void pattern(String value, Pattern regex, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (value == null || regex.matcher(value).matches()) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
     }
 
     /**
@@ -368,11 +585,24 @@ public final class BusinessAssert {
         pattern(value, compiled, message);
     }
 
+    public static void pattern(String value, String regex, ErrorCodeAndMessage errorCodeAndMessage) {
+        Pattern compiled = PATTERNS.get(regex);
+        if (compiled == null) {
+            PATTERNS.put(regex, compiled = Pattern.compile(regex));
+        }
+
+        pattern(value, compiled, errorCodeAndMessage);
+    }
+
     /**
      * 主键必须大于0，且不为null
      */
     public static void isPrimaryKey(Number key) {
-        isPrimaryKey(key, null);
+        if (key != null && key.longValue() > 0) {
+            return;
+        }
+
+        throwIllegalArgumentException();
     }
 
     /**
@@ -385,11 +615,24 @@ public final class BusinessAssert {
         throwIllegalArgumentException(message);
     }
 
+    public static void isPrimaryKey(Number key, ErrorCodeAndMessage errorCodeAndMessage) {
+        if (key != null && key.longValue() > 0) {
+            return;
+        }
+
+        throwIllegalArgumentException(errorCodeAndMessage);
+    }
+
     public static void checkUrn(String urn) {
         if (StringUtils.isNotBlank(urn) && BusinessUrns.isUrn(urn)) {
             return;
         }
         throwIllegalArgumentException("urn不合法");
+    }
+
+
+    public static void throwIllegalArgumentException() {
+        throw new BusinessException(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
     }
 
     /**
@@ -401,6 +644,14 @@ public final class BusinessAssert {
         if (StringUtils.isNotBlank(message)) {
             throw new BusinessException(Errors.Biz.ILLEGAL_ARGUMENT_ERROR, message);
         }
-        throw new BusinessException(Errors.Biz.ILLEGAL_ARGUMENT_ERROR);
+        throwIllegalArgumentException();
+    }
+
+    public static void throwIllegalArgumentException(ErrorCodeAndMessage errorCodeAndMessage) {
+        if (errorCodeAndMessage == null) {
+            throwIllegalArgumentException();
+        }
+
+        throw new BusinessException(errorCodeAndMessage);
     }
 }

@@ -31,5 +31,7 @@ public interface Errors {
         ErrorCodeAndMessage UNSUPPORTED_MEDIA_TYPE_ERROR = ErrorCodeAndMessage.create("999992", "不支持当前媒体类型");
         ErrorCodeAndMessage METHOD_NOT_ALLOWED_ERROR = ErrorCodeAndMessage.create("999991", "不支持当前方法");
         ErrorCodeAndMessage ENCRYPT_ERROR = ErrorCodeAndMessage.create("900000", "加密失败");
+        ErrorCodeAndMessage SIGN_FAILED_ERROR = ErrorCodeAndMessage.create("900001", "签名失败");
+        ErrorCodeAndMessage SIGN_VERIFY_FAILED_ERROR = ErrorCodeAndMessage.create("900002", "签名验证失败");
     }
 }

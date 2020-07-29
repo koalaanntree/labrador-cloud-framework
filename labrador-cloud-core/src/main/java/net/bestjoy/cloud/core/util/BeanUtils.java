@@ -13,10 +13,37 @@ import java.util.Map;
 
 /**
  * Bean工具类
- *
  */
 @Slf4j
 public final class BeanUtils {
+
+
+
+    public static Map<String, String> beanToStringMap(Object object) {
+        PropertyDescriptor[] propertyDescriptors = org.springframework.beans.BeanUtils.getPropertyDescriptors(object.getClass());
+
+        Map<String, String> map = new HashMap<>(propertyDescriptors.length);
+
+        PropertyDescriptor descriptor = null;
+
+        try {
+            for (int i = 0; i < propertyDescriptors.length; i++) {
+                descriptor = propertyDescriptors[i];
+                if (descriptor.getReadMethod().toString().indexOf(" native") > 0) {
+                    continue;
+                }
+
+                Object value = descriptor.getReadMethod().invoke(object);
+                map.put(descriptor.getDisplayName(), String.valueOf(value));
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException(
+                    "转换错误fieldName:" + descriptor != null ? descriptor.getDisplayName() : "null");
+        }
+
+        return map;
+    }
+
 
     /**
      * bean转map
