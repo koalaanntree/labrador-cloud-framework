@@ -2,7 +2,8 @@ package net.bestjoy.cloud.core.bean;
 
 import lombok.Data;
 import lombok.ToString;
-import net.bestjoy.cloud.error.bean.*;
+import net.bestjoy.cloud.core.error.CodeAndMessage;
+import net.bestjoy.cloud.core.error.ErrorCodeAndMessage;
 
 /***
  * 含子code的返回结果

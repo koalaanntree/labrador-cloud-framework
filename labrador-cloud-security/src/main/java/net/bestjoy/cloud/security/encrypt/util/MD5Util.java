@@ -1,11 +1,12 @@
 package net.bestjoy.cloud.security.encrypt.util;
 
 
-import net.bestjoy.cloud.error.bean.SysException;
+import net.bestjoy.cloud.core.error.SysException;
 
 import java.security.MessageDigest;
 
-import static net.bestjoy.cloud.error.bean.Errors.Sys.ENCRYPT_ERROR;
+import static net.bestjoy.cloud.core.error.Errors.Sys.ENCRYPT_ERROR;
+
 
 /***
  * md5加密

@@ -1,8 +1,8 @@
 package net.bestjoy.cloud.core.util;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bestjoy.cloud.error.bean.Errors;
-import net.bestjoy.cloud.error.bean.SysException;
+import net.bestjoy.cloud.core.error.Errors;
+import net.bestjoy.cloud.core.error.SysException;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;

@@ -1,8 +1,8 @@
 package net.bestjoy.cloud.core.util;
 
 import lombok.SneakyThrows;
-import net.bestjoy.cloud.error.bean.Errors;
-import net.bestjoy.cloud.error.bean.SysException;
+import net.bestjoy.cloud.core.error.Errors;
+import net.bestjoy.cloud.core.error.SysException;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
