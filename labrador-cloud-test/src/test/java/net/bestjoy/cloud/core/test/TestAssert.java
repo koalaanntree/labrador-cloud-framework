@@ -1,6 +1,5 @@
 package net.bestjoy.cloud.core.test;
 
-import net.bestjoy.cloud.core.annotation.NeedValidate;
 import net.bestjoy.cloud.core.bean.AssertObject;
 import net.bestjoy.cloud.test.FrameworkTestApplication;
 import org.junit.Test;
@@ -16,11 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest(classes = FrameworkTestApplication.class)
 public class TestAssert {
 
-
-    @NeedValidate
-    public void testAssert(AssertObject assertObject) {
-        System.out.println(assertObject.toString());
-    }
 
     @Test
     public void test() {

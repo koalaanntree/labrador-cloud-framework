@@ -2,7 +2,6 @@ package net.bestjoy.cloud.core.bean;
 
 import lombok.Data;
 import lombok.ToString;
-import net.bestjoy.cloud.core.annotation.NotNull;
 
 /***
  * @author ray
@@ -11,7 +10,6 @@ import net.bestjoy.cloud.core.annotation.NotNull;
 @ToString
 public class AssertObject {
 
-    @NotNull
     private String name;
 
     private String value;

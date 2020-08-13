@@ -24,31 +24,31 @@
     <dependencyManagement>
         <dependencies>
             <!--<dependency>-->
-                <!--<groupId>org.mybatis</groupId>-->
-                <!--<artifactId>mybatis</artifactId>-->
-                <!--<version>${mybatis.version}</version>-->
+            <!--<groupId>org.mybatis</groupId>-->
+            <!--<artifactId>mybatis</artifactId>-->
+            <!--<version>${mybatis.version}</version>-->
             <!--</dependency>-->
             <!--<dependency>-->
-                <!--<groupId>org.mybatis.spring.boot</groupId>-->
-                <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
-                <!--<version>${mybatis.spring.boot.starter}</version>-->
+            <!--<groupId>org.mybatis.spring.boot</groupId>-->
+            <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
+            <!--<version>${mybatis.spring.boot.starter}</version>-->
             <!--</dependency>-->
             <!--<dependency>-->
-                <!--<groupId>com.baomidou</groupId>-->
-                <!--<artifactId>mybatis-plus-boot-starter</artifactId>-->
-                <!--<version>${mybatis.plus.version}</version>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-                <!--<groupId>com.baomidou</groupId>-->
-                <!--<artifactId>mybatis-plus</artifactId>-->
-                <!--<version>${mybatis.plus.version}</version>-->
+            <!--<groupId>com.baomidou</groupId>-->
+            <!--<artifactId>mybatis-plus-boot-starter</artifactId>-->
+            <!--<version>${mybatis.plus.version}</version>-->
             <!--</dependency>-->
 
             <!--<dependency>-->
-                <!--<groupId>mysql</groupId>-->
-                <!--<artifactId>mysql-connector-java</artifactId>-->
-                <!--<version>${mysql.version}</version>-->
+            <!--<groupId>com.baomidou</groupId>-->
+            <!--<artifactId>mybatis-plus</artifactId>-->
+            <!--<version>${mybatis.plus.version}</version>-->
+            <!--</dependency>-->
+
+            <!--<dependency>-->
+            <!--<groupId>mysql</groupId>-->
+            <!--<artifactId>mysql-connector-java</artifactId>-->
+            <!--<version>${mysql.version}</version>-->
             <!--</dependency>-->
 
             <dependency>
@@ -94,6 +94,11 @@
             <dependency>
                 <groupId>net.bestjoy</groupId>
                 <artifactId>labrador-cloud-mq</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bestjoy</groupId>
+                <artifactId>labrador-cloud-influxdb</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

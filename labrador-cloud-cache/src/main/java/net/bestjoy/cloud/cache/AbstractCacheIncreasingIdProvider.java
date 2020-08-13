@@ -3,8 +3,8 @@ package net.bestjoy.cloud.cache;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
+import net.bestjoy.cloud.core.error.SysException;
 import net.bestjoy.cloud.core.util.Dates;
-import net.bestjoy.cloud.error.bean.SysException;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;

@@ -89,7 +89,7 @@
     </root>
 
     <!--全局日志-->
-    <root level="DEBUG" additivity="false">
+    <root level="INFO" additivity="false">
         <!--开发环境需要输出业务日志方便开发，测试、生产环境不需要-->
         <appender-ref ref="BIZ_LOG"/>
         <appender-ref ref="ERROR_LOG"/>
