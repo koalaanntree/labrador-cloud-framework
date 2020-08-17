@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.bestjoy.cloud.core.error.BusinessException;
 import net.bestjoy.cloud.core.reader.enums.ExcelVersionEnum;
 import net.bestjoy.cloud.core.util.Dates;
-import net.bestjoy.cloud.error.bean.BusinessException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -18,7 +18,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-import static net.bestjoy.cloud.error.bean.Errors.Biz.EXCEL_RESOLVE_ERROR;
+import static net.bestjoy.cloud.core.error.Errors.Biz.EXCEL_RESOLVE_ERROR;
+
 
 /***
  * excel reader

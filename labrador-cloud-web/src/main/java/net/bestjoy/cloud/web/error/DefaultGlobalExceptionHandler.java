@@ -1,9 +1,9 @@
 package net.bestjoy.cloud.web.error;
 
 import net.bestjoy.cloud.core.bean.Result;
-import net.bestjoy.cloud.error.bean.BusinessException;
-import net.bestjoy.cloud.error.bean.Errors;
-import net.bestjoy.cloud.error.bean.SysException;
+import net.bestjoy.cloud.core.error.BusinessException;
+import net.bestjoy.cloud.core.error.Errors;
+import net.bestjoy.cloud.core.error.SysException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.Primary;

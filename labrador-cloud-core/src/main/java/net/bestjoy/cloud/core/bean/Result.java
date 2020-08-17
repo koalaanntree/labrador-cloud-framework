@@ -3,7 +3,9 @@ package net.bestjoy.cloud.core.bean;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import net.bestjoy.cloud.error.bean.*;
+import net.bestjoy.cloud.core.error.BusinessException;
+import net.bestjoy.cloud.core.error.CodeAndMessage;
+import net.bestjoy.cloud.core.error.ErrorCodeAndMessage;
 
 import java.io.Serializable;
 

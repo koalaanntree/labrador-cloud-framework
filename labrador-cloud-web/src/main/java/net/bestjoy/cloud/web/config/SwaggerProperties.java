@@ -28,7 +28,4 @@ public class SwaggerProperties {
     private String termsOfServiceUrl;
 
     private Contact contact;
-
-    @NotNull
-    private String scanBasePackage;
 }
