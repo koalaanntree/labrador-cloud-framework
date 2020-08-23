@@ -68,6 +68,11 @@
             </dependency>
             <dependency>
                 <groupId>net.bestjoy</groupId>
+                <artifactId>labrador-cloud-nacos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.bestjoy</groupId>
                 <artifactId>labrador-cloud-datasource</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -24,15 +24,20 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
             <version>2.1.2.RELEASE</version>
         </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>net.bestjoy</groupId>
-        <artifactId>labrador-cloud-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.bestjoy</groupId>
+            <artifactId>labrador-cloud-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 
     </dependencies>
