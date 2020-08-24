@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  net.bestjoy.cloud.nacos.config.NacosClient
+  net.bestjoy.cloud.nacos.config.NacosClientAutoConfiguration
