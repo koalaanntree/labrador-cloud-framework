@@ -22,6 +22,7 @@
         <module>labrador-cloud-test</module>
         <module>labrador-cloud-datasource</module>
         <module>labrador-cloud-influxdb</module>
+        <module>labrador-cloud-discovery</module>
     </modules>
 
     <name>labrador-cloud-framework</name>
@@ -216,6 +217,17 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <!-- 资源文件拷贝插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.version}</version>
@@ -245,6 +257,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
-
 </project>

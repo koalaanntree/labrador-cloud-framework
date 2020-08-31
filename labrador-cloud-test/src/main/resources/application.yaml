@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: testApp
+  profiles:
+    active: dev
+    include: discovery-nacos
+
+bestjoy:
+  discovery:
+    discovery-server-addr: http://192.168.116.128:8848

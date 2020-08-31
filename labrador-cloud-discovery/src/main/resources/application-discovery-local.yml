@@ -1,0 +1,13 @@
+#dev环境默认不启动注册nacos，方便开发调试
+spring:
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
+    nacos:
+      discovery:
+        enabled: false
+# 允许http请求
+feign:
+  okhttp:
+    enabled: true
