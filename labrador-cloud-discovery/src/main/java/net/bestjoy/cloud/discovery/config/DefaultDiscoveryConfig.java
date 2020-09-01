@@ -29,6 +29,6 @@ public class DefaultDiscoveryConfig {
 
     @PostConstruct
     public void init() {
-        Assert.notNull(discoveryProperties.getDiscoveryServerAddr(), "注册中心服务地址未设置");
+        Assert.notNull(discoveryProperties.getServerAddr(), "注册中心服务地址未设置");
     }
 }
