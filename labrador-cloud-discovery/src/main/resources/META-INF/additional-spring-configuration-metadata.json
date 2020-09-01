@@ -15,7 +15,8 @@
     {
       "name": "bestjoy.discovery.server-addr",
       "type": "java.lang.String",
-      "description": "注册中心地址"
+      "description": "注册中心地址",
+      "defaultValue": "http://127.0.0.1:8848"
     }
   ]
 }

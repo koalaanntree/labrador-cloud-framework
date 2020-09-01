@@ -1,7 +1,7 @@
-package net.bestjoy.cloud.security.signature.impl;
+package net.bestjoy.cloud.core.signature.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bestjoy.cloud.security.signature.SignTypeEnum;
+import net.bestjoy.cloud.core.signature.SignTypeEnum;
 
 /***
  * rsa 签名方式

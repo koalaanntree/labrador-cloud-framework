@@ -7,7 +7,7 @@ spring:
     nacos:
       discovery:
         enabled: true
-        server-addr: ${bestjoy.discovery.discovery-server-addr}
+        server-addr: ${bestjoy.discovery.server-addr}
         service: ${bestjoy.discovery.service-name:${spring.application.name}}
 # 不允许http请求
 feign:
