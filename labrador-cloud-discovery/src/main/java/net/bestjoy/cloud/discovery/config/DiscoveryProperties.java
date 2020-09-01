@@ -2,7 +2,6 @@ package net.bestjoy.cloud.discovery.config;
 
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /***
@@ -11,16 +10,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ToString
-@ConfigurationProperties("bestjoy.discovery")
+@ConfigurationProperties(prefix = "bestjoy.discovery")
 public class DiscoveryProperties {
-
-    @Value("${bestjoy.discovery.service:${spring.application.name:}}")
+    /**
+     * 服务名称
+     */
     private String serviceName;
 
     /***
      * 发现服务地址
      */
-    private String discoveryServerAddr;
+    private String serverAddr;
 
 //todo add...
 }

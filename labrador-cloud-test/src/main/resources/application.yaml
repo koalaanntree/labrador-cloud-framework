@@ -7,4 +7,7 @@ spring:
 
 bestjoy:
   discovery:
-    discovery-server-addr: http://192.168.116.128:8848
+    server-addr: http://192.168.116.128:8848
+    service-name: testAppService
+#    service-name: testAppService
+#    discovery-server-addr: http://192.168.116.128:8848
