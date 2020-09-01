@@ -1,0 +1,14 @@
+#测试环境nacos注册，需要提供discovery-server-addr
+spring:
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: true
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: ${bestjoy.discovery.discovery-server-addr}
+# 不允许http请求
+feign:
+  okhttp:
+    enabled: false
