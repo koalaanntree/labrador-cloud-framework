@@ -14,6 +14,7 @@
         <module>labrador-cloud-web</module>
         <module>labrador-cloud-dependencies</module>
         <module>labrador-cloud-jdbc</module>
+        <module>labrador-cloud-cache-core</module>
     </modules>
 
     <name>labrador-cloud-framework</name>
