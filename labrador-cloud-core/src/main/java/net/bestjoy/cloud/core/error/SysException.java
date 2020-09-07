@@ -1,9 +1,9 @@
 package net.bestjoy.cloud.core.error;
 
-
 import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.bestjoy.cloud.core.error.ErrorCodeAndMessage;
 
 /**
  * 系统异常
@@ -16,14 +16,18 @@ public class SysException extends RuntimeException {
     /**
      * 异常对象
      */
-    private CodeAndMessage error;
+    private ErrorCodeAndMessage error;
 
 
     public SysException(ErrorCodeAndMessage error, Throwable cause) {
         super(JSONObject.toJSONString(error), cause);
     }
 
-    public SysException(Integer errorCode, String errorMessage) {
+    public SysException(String errorCode, String errorMessage) {
         this.error = ErrorCodeAndMessage.create(errorCode, errorMessage);
+    }
+
+    public SysException(ErrorCodeAndMessage error, String errorMessage) {
+        this.error = ErrorCodeAndMessage.create(error.getCode(), errorMessage);
     }
 }

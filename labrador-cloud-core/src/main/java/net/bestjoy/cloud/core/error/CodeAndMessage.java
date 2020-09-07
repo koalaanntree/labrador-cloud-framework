@@ -13,7 +13,7 @@ public class CodeAndMessage {
     /**
      * 返回码
      */
-    private Integer code;
+    private String code;
     /***
      * 返回信息
      */
@@ -23,12 +23,12 @@ public class CodeAndMessage {
 
     }
 
-    public CodeAndMessage(Integer code, String message) {
+    public CodeAndMessage(String code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public static CodeAndMessage create(Integer code, String message) {
+    public static CodeAndMessage create(String code, String message) {
         return new CodeAndMessage(code, message);
     }
 
