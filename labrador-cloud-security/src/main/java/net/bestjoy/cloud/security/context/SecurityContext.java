@@ -8,7 +8,6 @@ import net.bestjoy.cloud.security.core.error.UserNeedLoginException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.List;
  * @author ray
  */
 @Slf4j
-@Component
 public final class SecurityContext {
     /***
      * 系统id
