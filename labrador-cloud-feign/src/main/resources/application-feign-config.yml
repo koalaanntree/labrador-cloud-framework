@@ -1,0 +1,12 @@
+ribbon:
+  eureka:
+    enabled: false
+  eager-load:
+    enabled: true
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+  MaxAutoRetries: 0
+  MaxAutoRetriesNextServer: 0
+  RetryableStatusCodes: 502 #不开启404重试，避免大量404请求攻击服务
+  ServerListRefreshInterval: 3000
+  OkToRetryOnAllOperations: false

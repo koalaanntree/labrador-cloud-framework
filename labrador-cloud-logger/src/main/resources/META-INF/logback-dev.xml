@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <!--需要根据业务修改-->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/><!--应用名-->
+    <springProperty scope="context" name="APP_VERSION" source="spring.application.version"/><!--应用版本-->
+    <property name="LOG_HOME" value="logs"/><!--日志根目录-->
+    <property name="FILE_PATH" value="${LOG_HOME}/${APP_NAME}"/>
+    <property name="FILE_PATTERN" value=".%d{yyyy-MM-dd}-%i.log"/>
+    <springProperty scope="context" name="MAX_SIZE" source="logging.file.max-size"/><!--分包大小-->
+    <springProperty scope="context" name="MAX_HISTORY" source="logging.file.max-history"/><!--保留日志数量-->
+    <springProperty scope="context" name="BASE_PACKAGE" source="logging.base-package"/><!--当前项目的主包-->
+
+    <!--业务摘要日志-->
+    <appender name="BIZ_DIGEST_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${FILE_PATH}/biz-digest${FILE_PATTERN}</FileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <maxFileSize>${MAX_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <!--时间,日志级别,应用名,应用版本,traceid,spanId,
+            [(业务描述)(请求参数列表)(结果码)(耗时)(返回结果)]-->
+            <Pattern>
+                %d{yyyy/MM/dd-HH:mm:ss.SSS},%-5level,${APP_NAME},${APP_VERSION},%X{X-B3-TraceId},%X{X-B3-SpanId},[\(%X{BJ-BizDescription}\),\(%X{BJ-Args}\),\(%X{BJ-ResultCode}\),\(%X{BJ-TimeCost}\),\(%X{BJ-ReturnResult}\)]%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!--业务日志-->
+    <appender name="BIZ_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="net.bestjoy.cloud.logger.filter.MultiLevelFilter">
+            <level>INFO,WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${FILE_PATH}/biz${FILE_PATTERN}</FileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <maxFileSize>${MAX_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <!--时间,日志级别，应用名, 应用版本，traceId,spanId,接口版本,类名.方法名,行数,关键参数-->
+            <Pattern>
+                %d{yyyy/MM/dd-HH:mm:ss.SSS},%-5level,${APP_NAME},${APP_VERSION},%X{X-B3-TraceId},%X{X-B3-SpanId},%C{2}.%M,%L,%msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!--错误日志-->
+    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${FILE_PATH}/error${FILE_PATTERN}</FileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <maxFileSize>${MAX_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{yyyy/MM/dd-HH:mm:ss.SSS},%-5level,%X{X-B3-TraceId}-%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!--开发控制台-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>
+                %d{yyyy/MM/dd-HH:mm:ss.SSS} [%thread] %-5level %logger{35} [%X{BJ-TRACE-ID}] - %msg %n
+            </pattern>
+        </encoder>
+    </appender>
+
+
+    <!--业务日志-->
+    <root name="BIZ_LOG" additivity="false">
+        <appender-ref ref="BIZ_LOG"/>
+    </root>
+
+    <!--业务摘要日志-->
+    <logger name="BIZ_DIGEST_LOG" level="INFO" additivity="false">
+        <appender-ref ref="BIZ_DIGEST_LOG"/>
+    </logger>
+
+    <!--全局错误日志-->
+    <root level="ERROR" additivity="false">
+        <appender-ref ref="ERROR_LOG"/>
+    </root>
+
+    <!--全局日志-->
+    <root level="INFO" additivity="false">
+        <!--开发环境需要输出业务日志方便开发，测试、生产环境不需要-->
+        <appender-ref ref="BIZ_LOG"/>
+        <appender-ref ref="ERROR_LOG"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
