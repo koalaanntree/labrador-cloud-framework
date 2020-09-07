@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "bestjoy.discovery",
+      "type": "net.bestjoy.cloud.discovery.config.DiscoveryProperties",
+      "sourceType": "net.bestjoy.cloud.discovery.config.DiscoveryProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bestjoy.discovery.service-name",
+      "type": "java.lang.String",
+      "description": "服务名"
+    },
+    {
+      "name": "bestjoy.discovery.server-addr",
+      "type": "java.lang.String",
+      "description": "注册中心地址",
+      "defaultValue": "http://127.0.0.1:8848"
+    }
+  ]
+}

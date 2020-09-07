@@ -1,13 +1,8 @@
 package net.bestjoy.cloud.discovery.config;
 
-import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.ConditionalOnDiscoveryEnabled;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +24,7 @@ public class DefaultDiscoveryConfig {
 
     @PostConstruct
     public void init() {
-        Assert.notNull(discoveryProperties.getDiscoveryServerAddr(), "注册中心服务地址未设置");
+//        Assert.notNull(discoveryProperties.getServerAddr(), "注册中心服务地址未设置");
+        //todo
     }
 }

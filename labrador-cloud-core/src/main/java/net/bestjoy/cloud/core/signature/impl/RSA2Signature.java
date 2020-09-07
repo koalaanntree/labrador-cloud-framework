@@ -1,11 +1,11 @@
-package net.bestjoy.cloud.security.signature.impl;
+package net.bestjoy.cloud.core.signature.impl;
 
 import com.alipay.api.internal.util.AlipaySignature;
 import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.error.BusinessAssert;
 import net.bestjoy.cloud.core.error.BusinessException;
-import net.bestjoy.cloud.security.signature.Signature;
-import net.bestjoy.cloud.security.signature.SignTypeEnum;
+import net.bestjoy.cloud.core.signature.SignTypeEnum;
+import net.bestjoy.cloud.core.signature.Signature;
 
 import java.util.Map;
 

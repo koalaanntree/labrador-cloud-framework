@@ -1,4 +1,4 @@
-package net.bestjoy.cloud.security.signature;
+package net.bestjoy.cloud.core.signature;
 
 /***
  * 支持的签名类型

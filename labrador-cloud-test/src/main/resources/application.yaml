@@ -3,8 +3,9 @@ spring:
     name: testApp
   profiles:
     active: dev
-    include: discovery-nacos
+    include: discovery-registry
 
 bestjoy:
   discovery:
-    discovery-server-addr: http://192.168.116.128:8848
+    server-addr: http://192.168.116.128:8848
+    service-name: testAppService
