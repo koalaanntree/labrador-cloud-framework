@@ -1,4 +1,4 @@
-package net.bestjoy.cloud.security.signature;
+package net.bestjoy.cloud.core.signature;
 
 
 import java.util.Map;
