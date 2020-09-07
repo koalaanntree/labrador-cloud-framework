@@ -2,6 +2,7 @@ package net.bestjoy.cloud.web.config;
 
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import springfox.documentation.service.Contact;
 
@@ -13,16 +14,15 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @ToString
-@ConfigurationProperties(prefix = "bt.swagger")
+@ConfigurationProperties(prefix = "bestjoy.swagger")
 public class SwaggerProperties {
 
-    @NotNull
+    @Value("${bestjoy.swagger.title:${spring.application.name}}")
     private String title;
 
-    @NotNull
     private String description;
 
-    @NotNull
+    @Value("${bestjoy.swagger.version:${spring.application.version}}")
     private String version;
 
     private String termsOfServiceUrl;

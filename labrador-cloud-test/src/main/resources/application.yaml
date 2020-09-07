@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: testApp
+  profiles:
+    active: dev
+    include: discovery-registry
+
+bestjoy:
+  discovery:
+    server-addr: http://192.168.116.128:8848
+    service-name: testAppService
