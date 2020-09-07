@@ -23,6 +23,7 @@
         <module>labrador-cloud-datasource</module>
         <module>labrador-cloud-influxdb</module>
         <module>labrador-cloud-discovery</module>
+        <module>labrador-cloud-region</module>
     </modules>
 
     <name>labrador-cloud-framework</name>
