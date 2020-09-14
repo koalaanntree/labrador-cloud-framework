@@ -1,9 +1,10 @@
 spring:
   application:
     name: testApp
+    version: 1.0
   profiles:
     active: dev
-    include: discovery-registry
+    include: discovery-local
 
 bestjoy:
   discovery:

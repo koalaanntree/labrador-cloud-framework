@@ -1,6 +1,7 @@
 package net.bestjoy.cloud.security.core.entitiy;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
@@ -21,11 +22,13 @@ public class User extends BaseEntity<Long> {
     /**
      * 系统id
      */
+    @TableField("system_id")
     private String systemId;
 
     /**
      * 用户id
      */
+    @TableField("user_id")
     private String userId;
 
     /***
@@ -42,12 +45,14 @@ public class User extends BaseEntity<Long> {
      * 用户类型
      */
     @EnumValue
+    @TableField("user_type")
     private UserTypeEnum userType;
 
     /**
      * 用户状态
      */
     @EnumValue
+    @TableField("user_state")
     private UserStateEnum userState;
 
     /**

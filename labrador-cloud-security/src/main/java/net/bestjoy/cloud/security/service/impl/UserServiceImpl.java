@@ -1,8 +1,11 @@
 package net.bestjoy.cloud.security.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
+import net.bestjoy.cloud.core.bean.PageBean;
 import net.bestjoy.cloud.security.context.SecurityContext;
+import net.bestjoy.cloud.security.core.dto.QueryUserDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.UserStateEnum;
 import net.bestjoy.cloud.security.persistent.repository.UserMapper;
@@ -101,5 +104,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Permission> getUserPermissionList(String userId) {
         return userRoleMapper.selectUserPermissionList(userId);
+    }
+
+    @Override
+    public IPage<User> pageQueryUser(
+            PageBean<User> pageBean, QueryUserDTO queryUserDTO) {
+
+        return userMapper.selectPage(pageBean.getPage(), queryUserDTO.buildQueryCondition());
     }
 }

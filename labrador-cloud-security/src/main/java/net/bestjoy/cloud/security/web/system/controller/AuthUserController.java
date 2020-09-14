@@ -1,15 +1,22 @@
 package net.bestjoy.cloud.security.web.system.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.bestjoy.cloud.core.bean.PageBean;
+import net.bestjoy.cloud.core.bean.PageData;
 import net.bestjoy.cloud.core.bean.Result;
 import net.bestjoy.cloud.core.error.BusinessException;
 import net.bestjoy.cloud.security.context.SecurityContext;
+import net.bestjoy.cloud.security.converter.UserConverter;
 import net.bestjoy.cloud.security.core.UserSession;
+import net.bestjoy.cloud.security.core.dto.QueryUserDTO;
+import net.bestjoy.cloud.security.core.dto.UserDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.service.PermissionService;
 import net.bestjoy.cloud.security.service.UserService;
 import net.bestjoy.cloud.security.web.system.response.PermissionResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +43,26 @@ public class AuthUserController {
     private PermissionService permissionService;
     @Resource
     private UserService userService;
+
+
+    @GetMapping("list")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation("用户列表（管理员权限）")
+    public Result<PageData<UserDTO>> listUser(QueryUserDTO queryUserDTO, PageBean pageBean) {
+        IPage<User> pageUser = userService.pageQueryUser(pageBean, queryUserDTO);
+
+        if (pageUser == null || CollectionUtils.isEmpty(pageUser.getRecords())) {
+            return Result.success(PageData.emptyResult());
+        }
+
+        List<UserDTO> userDTOList = new ArrayList<>();
+        pageUser.getRecords().forEach(user -> {
+            userDTOList.add(UserConverter.INSTANCE.userToDTO(user));
+        });
+
+        return Result.success(
+                PageData.buildResult(userDTOList, pageUser.getCurrent(), pageUser.getSize(), pageUser.getTotal()));
+    }
 
     @GetMapping("permission/check")
     @ApiOperation("当前用户权限(权限名、单个)检查")

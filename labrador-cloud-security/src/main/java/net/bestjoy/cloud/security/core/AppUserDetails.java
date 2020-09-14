@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 /***
  * security user
@@ -46,6 +47,12 @@ public class AppUserDetails implements UserDetails {
      * 用户ID
      */
     private String userId;
+
+    /***
+     * 创建时间
+     */
+    private Date createTime;
+
 
     public AppUserDetails(String username, String password) {
         this.username = username;

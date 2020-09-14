@@ -3,6 +3,7 @@ package net.bestjoy.cloud.core.util;
 
 import net.bestjoy.cloud.core.error.Errors;
 import net.bestjoy.cloud.core.error.SysException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,6 +35,18 @@ public class Dates {
      */
     public static Date now() {
         return new Date();
+    }
+
+    public static String formatNow() {
+        return formatNow(null);
+    }
+
+    public static String formatNow(String format) {
+        if (StringUtils.isBlank(format)) {
+            format = DATETIME_FORMAT;
+        }
+
+        return format(now(), format);
     }
 
     /**

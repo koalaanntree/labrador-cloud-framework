@@ -1,6 +1,9 @@
 package net.bestjoy.cloud.security.service;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import net.bestjoy.cloud.core.bean.PageBean;
+import net.bestjoy.cloud.security.core.dto.QueryUserDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 
 import java.util.List;
@@ -17,6 +20,15 @@ public interface UserService {
      * @return
      */
     User getUserByUsername(String username);
+
+    /**
+     * 分页查询用户
+     *
+     * @param pageBean     分页参数
+     * @param queryUserDTO
+     * @return
+     */
+    IPage<User> pageQueryUser(PageBean<User> pageBean, QueryUserDTO queryUserDTO);
 
     /**
      * 根据userId查找

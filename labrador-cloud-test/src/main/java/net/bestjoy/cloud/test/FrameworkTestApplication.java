@@ -2,6 +2,7 @@ package net.bestjoy.cloud.test;
 
 
 import lombok.extern.slf4j.Slf4j;
+import net.bestjoy.cloud.core.bootstrap.RootBootstrap;
 import net.bestjoy.cloud.web.annotation.EnableSwaggerDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,10 +18,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableSwaggerDoc
 @EnableTransactionManagement
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class FrameworkTestApplication {
+public class FrameworkTestApplication extends RootBootstrap {
 
     public static void main(String[] args) {
-        SpringApplication.run(FrameworkTestApplication.class);
-        log.info("framework test service application running...");
+        run(FrameworkTestApplication.class, args);
     }
 }
