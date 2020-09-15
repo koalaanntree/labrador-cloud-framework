@@ -30,8 +30,47 @@ public class PageData<T> {
      */
     private PageInfo pageInfo;
 
-    public static PageData<?> builderPageData(List<?> list, PageInfo pageInfo) {
-        PageData pageData = new PageData();
+    /**
+     * 装换bean
+     *
+     * @param <R> 返回结果
+     * @param <O> 原始结果
+     */
+    public interface BeanConverter<R, O> {
+        /**
+         * 类型装换
+         *
+         * @param o 原始数据
+         * @return 转换数据
+         */
+        R convert(O o);
+    }
+
+    /**
+     * 构造分页返回结果
+     *
+     * @param page
+     * @param beanConverter
+     * @param <T>
+     * @param <O>
+     * @return
+     */
+    public static <T, O> PageData<T> buildResult(IPage<O> page, BeanConverter<T, O> beanConverter) {
+
+        if (page == null || CollectionUtils.isEmpty(page.getRecords())) {
+            return emptyResult();
+        }
+
+        List<T> result = new ArrayList<>();
+        page.getRecords().forEach(item -> {
+            result.add(beanConverter.convert(item));
+        });
+        return buildResult(result, page.getCurrent(), page.getSize(), page.getTotal());
+    }
+
+
+    public static <T> PageData<T> builderPageData(List<T> list, PageInfo pageInfo) {
+        PageData<T> pageData = new PageData();
         pageData.setRecords(list);
         pageData.setPageInfo(pageInfo);
         return pageData;
@@ -45,7 +84,7 @@ public class PageData<T> {
      * @param total
      * @return
      */
-    public static PageData<?> emptyResult(long current, long size, long total) {
+    public static <T> PageData<T> emptyResult(long current, long size, long total) {
 
         return builderPageData(new ArrayList(), PageInfo.builder().current(current).total(total).size(size).build());
     }
@@ -54,23 +93,23 @@ public class PageData<T> {
      * 返回空
      * @return
      */
-    public static PageData<?> emptyResult() {
+    public static <T> PageData<T> emptyResult() {
         return emptyResult(0L, 0L, 0L);
     }
 
-    public static PageData<?> buildResult(List<?> records, long current, long size, long total) {
+    public static <T> PageData<T> buildResult(List<T> records, long current, long size, long total) {
         return builderPageData(records, PageInfo.builder().current(current).total(total).size(size).build());
     }
 
-    public static PageData<?> buildResult(Page<?> page) {
+    public static <T> PageData<T> buildResult(Page<T> page) {
         return page == null ? emptyResult() : buildResult(page.getRecords(), page.getCurrent(), page.getSize(), page.getTotal());
     }
 
-    public static PageData<?> buildResult(IPage<?> iPage) {
+    public static <T> PageData<T> buildResult(IPage<T> iPage) {
         return iPage == null ? emptyResult() : buildResult(iPage.getRecords(), iPage.getCurrent(), iPage.getSize(), iPage.getTotal());
     }
 
-    public static Result<PageData<?>> buildResultResponse(IPage<?> page) {
+    public static <T> Result<PageData<T>> buildResultResponse(IPage<T> page) {
         return Result.success(buildResult(page));
     }
 }

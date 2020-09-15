@@ -51,17 +51,8 @@ public class AuthUserController {
     public Result<PageData<UserDTO>> listUser(QueryUserDTO queryUserDTO, PageBean pageBean) {
         IPage<User> pageUser = userService.pageQueryUser(pageBean, queryUserDTO);
 
-        if (pageUser == null || CollectionUtils.isEmpty(pageUser.getRecords())) {
-            return Result.success(PageData.emptyResult());
-        }
-
-        List<UserDTO> userDTOList = new ArrayList<>();
-        pageUser.getRecords().forEach(user -> {
-            userDTOList.add(UserConverter.INSTANCE.userToDTO(user));
-        });
-
-        return Result.success(
-                PageData.buildResult(userDTOList, pageUser.getCurrent(), pageUser.getSize(), pageUser.getTotal()));
+        PageData<UserDTO> data = PageData.buildResult(pageUser, UserConverter.INSTANCE::userToDTO);
+        return Result.success(data);
     }
 
     @GetMapping("permission/check")
