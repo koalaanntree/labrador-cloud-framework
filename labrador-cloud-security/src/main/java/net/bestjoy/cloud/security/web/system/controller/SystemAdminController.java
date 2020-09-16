@@ -118,16 +118,19 @@ public class SystemAdminController {
 
         return optionalPermission.map(permission -> {
             Optional<Operation> optionalOperation = Optional.ofNullable(permissionService.getOperationById(permissionOperationSetRequest.getOperationId()));
+
+            if (!optionalOperation.isPresent()) {
+                log.warn("set permission operation, operation not found:{}", permissionOperationSetRequest.getOperationId());
+                throw new BusinessException(OPERATION_NOT_FOUND_ERROR);
+            }
+
             return optionalOperation.map(operation -> {
                 permissionService.addPermissionOperation(permission.getPermissionId(), operation.getOperationId());
                 return Result.success(Boolean.TRUE);
-            }).orElseThrow(() -> {
-                log.warn("set permission operation, operation not found:{}", permissionOperationSetRequest.getOperationId());
-                throw new BusinessException(OPERATION_NOT_FOUND_ERROR);
-            });
+            }).get();
         }).orElseThrow(() -> {
             log.warn("set permission operation, permission not found:{}", permissionOperationSetRequest.getPermissionId());
-            throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
+            return new BusinessException(PERMISSION_NOT_FOUND_ERROR);
         });
     }
 
@@ -283,7 +286,7 @@ public class SystemAdminController {
             return Result.success(Boolean.TRUE);
         }).orElseThrow(() -> {
             log.warn("publish menu ,menu not found:{}", menuId);
-            throw new BusinessException(MENU_NOT_FOUND_ERROR);
+            return new BusinessException(MENU_NOT_FOUND_ERROR);
         });
     }
 
@@ -295,16 +298,19 @@ public class SystemAdminController {
 
         return optionalRole.map(role -> {
             Optional<Permission> optionalPermission = Optional.ofNullable(permissionService.getPermissionByPermissionId(rolePermissionSetRequest.getPermissionId()));
+
+            if (!optionalPermission.isPresent()) {
+                log.warn("role permission set, permission not found:{}", rolePermissionSetRequest.getPermissionId());
+                throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
+            }
+
             return optionalPermission.map(permission -> {
                 permissionService.addRolePermission(role.getRoleId(), permission.getPermissionId());
                 return Result.success(Boolean.TRUE);
-            }).orElseThrow(() -> {
-                log.warn("role permission set, permission not found:{}", rolePermissionSetRequest.getPermissionId());
-                throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
-            });
+            }).get();
         }).orElseThrow(() -> {
             log.warn("role permission set, role not found:{}", rolePermissionSetRequest.getRoleId());
-            throw new BusinessException(ROLE_NOT_FOUND_ERROR);
+            return new BusinessException(ROLE_NOT_FOUND_ERROR);
         });
     }
 
@@ -383,7 +389,7 @@ public class SystemAdminController {
             return Result.success(Boolean.TRUE);
         }).orElseThrow(() -> {
             log.warn("delete role, role not found:{}", roleId);
-            throw new BusinessException(ROLE_NOT_FOUND_ERROR);
+            return new BusinessException(ROLE_NOT_FOUND_ERROR);
         });
     }
 
@@ -402,17 +408,20 @@ public class SystemAdminController {
 
         return optionalUser.map(user -> {
             Optional<Role> optionalRole = Optional.ofNullable(permissionService.getRoleById(userRoleSetRequest.getRoleId()));
+
+            if (!optionalRole.isPresent()) {
+                log.warn("set user role, role not found:{}", userRoleSetRequest.getRoleId());
+                throw new BusinessException(ROLE_NOT_FOUND_ERROR);
+            }
+
             return optionalRole.map(role -> {
                 UserRole userRole = new UserRole(user.getUserId(), role.getRoleId());
                 userService.addUserRole(userRole);
                 return Result.success(Boolean.TRUE);
-            }).orElseThrow(() -> {
-                log.warn("set user role, role not found:{}", userRoleSetRequest.getRoleId());
-                throw new BusinessException(ROLE_NOT_FOUND_ERROR);
-            });
+            }).get();
         }).orElseThrow(() -> {
             log.warn("set user role, user not found:{}", userRoleSetRequest.getUserId());
-            throw new BusinessException(USER_NOT_FOUND_ERROR);
+            return new BusinessException(USER_NOT_FOUND_ERROR);
         });
 
     }
@@ -481,16 +490,19 @@ public class SystemAdminController {
             //设置element permission rel
             Optional<Permission> optionalPermission =
                     Optional.ofNullable(permissionService.getPermissionByPermissionId(elementPermissionSetRequest.getPermissionId()));
+
+            if (!optionalPermission.isPresent()) {
+                log.warn("set element permission, permission not found:{}", elementPermissionSetRequest.getPermissionId());
+                throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
+            }
+
             return optionalPermission.map(permission -> {
                 permissionSubjectProvider.addPermissionSubjectRel(element.getElementId(), permission.getPermissionId());
                 return Result.success(Boolean.TRUE);
-            }).orElseThrow(() -> {
-                log.warn("set element permission, permission not found:{}", elementPermissionSetRequest.getPermissionId());
-                throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
-            });
+            }).get();
         }).orElseThrow(() -> {
             log.warn("set element permission, menu not found:{}", elementPermissionSetRequest.getElementId());
-            throw new BusinessException(ELEMENT_NOT_FOUND_ERROR);
+            return new BusinessException(ELEMENT_NOT_FOUND_ERROR);
         });
     }
 
@@ -516,7 +528,7 @@ public class SystemAdminController {
             return Result.success(Boolean.TRUE);
         }).orElseThrow(() -> {
             log.warn("delete menu not found:{}", menuId);
-            throw new BusinessException(MENU_NOT_FOUND_ERROR);
+            return new BusinessException(MENU_NOT_FOUND_ERROR);
         });
     }
 
@@ -532,7 +544,7 @@ public class SystemAdminController {
             return Result.success(Boolean.TRUE);
         }).orElseThrow(() -> {
             log.warn("delete element :{} not found", elementId);
-            throw new BusinessException(ELEMENT_NOT_FOUND_ERROR);
+            return new BusinessException(ELEMENT_NOT_FOUND_ERROR);
         });
     }
 }
