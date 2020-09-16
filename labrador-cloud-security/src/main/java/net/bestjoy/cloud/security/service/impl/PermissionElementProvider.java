@@ -65,10 +65,10 @@ public class PermissionElementProvider implements PermissionSubjectProvider<Elem
     }
 
     @Override
-    public Element getPermissionSubjectByName(String subjectName) {
+    public Element getPermissionSubjectByCode(String subjectCode) {
         QueryWrapper<Element> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("element_name", subjectName);
-        queryWrapper.eq("system_id", SecurityContext.getSystemId());
+        queryWrapper.lambda().eq(Element::getElementCode, subjectCode);
+        queryWrapper.lambda().eq(Element::getSystemId, SecurityContext.getSystemId());
         return elementMapper.selectOne(queryWrapper);
     }
 

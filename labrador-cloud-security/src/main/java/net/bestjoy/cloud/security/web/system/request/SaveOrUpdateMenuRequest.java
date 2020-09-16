@@ -6,6 +6,7 @@ import lombok.ToString;
 import net.bestjoy.cloud.security.core.enums.MenuStatusEnum;
 import net.bestjoy.cloud.security.core.enums.MenuTypeEnum;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -19,8 +20,13 @@ public class SaveOrUpdateMenuRequest implements Serializable {
     @ApiModelProperty("菜单id，更新时必传")
     private String menuId;
 
-    @ApiModelProperty("菜单名称")
+    @NotBlank(message = "菜单名称不能为空")
+    @ApiModelProperty(value = "菜单名称", required = true)
     private String menuName;
+
+    @NotBlank(message = "菜单code不能为空")
+    @ApiModelProperty(value = "菜单code", required = true)
+    private String menuCode;
 
     @ApiModelProperty("菜单描述")
     private String description;

@@ -78,7 +78,7 @@ public class SystemRunner implements ApplicationRunner {
             user.setUserType(UserTypeEnum.ADMIN);
             userService.saveUser(user);
 
-            Role adminRole = permissionService.getRoleByName(ADMIN_ROLE);
+            Role adminRole = permissionService.getRoleByCode(ADMIN_ROLE);
 
             if (adminRole == null) {
                 adminRole = new Role();

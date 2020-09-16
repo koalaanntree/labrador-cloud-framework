@@ -34,12 +34,12 @@ public interface PermissionSubjectProvider<T> {
     void savePermissionSubject(T subject);
 
     /**
-     * 根据权限主体名称查询
+     * 根据权限主体code查询
      *
-     * @param subjectName
+     * @param subjectCode
      * @return
      */
-    T getPermissionSubjectByName(String subjectName);
+    T getPermissionSubjectByCode(String subjectCode);
 
     /**
      * 权限类型

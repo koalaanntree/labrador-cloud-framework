@@ -105,10 +105,10 @@ public class PermissionMenuProvider implements PermissionSubjectProvider<Menu> {
     }
 
     @Override
-    public Menu getPermissionSubjectByName(String subjectName) {
+    public Menu getPermissionSubjectByCode(String subjectCode) {
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("menu_name", subjectName);
-        queryWrapper.eq("system_id", SecurityContext.getSystemId());
+        queryWrapper.lambda().eq(Menu::getSystemId, SecurityContext.getSystemId());
+        queryWrapper.lambda().eq(Menu::getMenuCode, SecurityContext.getSystemId());
 
         return menuMapper.selectOne(queryWrapper);
     }

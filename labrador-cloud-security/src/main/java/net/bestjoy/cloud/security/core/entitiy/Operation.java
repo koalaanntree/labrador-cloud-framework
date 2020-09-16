@@ -17,14 +17,22 @@ public class Operation extends BaseEntity<Long> {
      * 系统id
      */
     private String systemId;
+
     /***
      * 操作id
      */
     private String operationId;
+
     /***
      * 操作名称
      */
     private String operationName;
+
+    /***
+     * 操作code，唯一
+     */
+    private String operationCode;
+
     /**
      * 操作描述
      */

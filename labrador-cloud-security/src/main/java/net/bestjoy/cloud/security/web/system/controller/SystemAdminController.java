@@ -1,5 +1,6 @@
 package net.bestjoy.cloud.security.web.system.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import net.bestjoy.cloud.core.bean.PageData;
 import net.bestjoy.cloud.core.bean.Result;
 import net.bestjoy.cloud.core.error.BusinessException;
 import net.bestjoy.cloud.security.annotation.IgnoreAuth;
+import net.bestjoy.cloud.security.core.dto.QueryRoleDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.MenuStatusEnum;
 import net.bestjoy.cloud.security.core.enums.MenuTypeEnum;
@@ -26,6 +28,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -84,12 +87,15 @@ public class SystemAdminController {
     @PostMapping("operation/saveOrUpdate")
     @ApiOperation("新增或者更新操作")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<OperationVO> saveOrUpdateOperation(SaveOrUpdateOperationRequest saveOrUpdateOperationRequest) {
+    public Result<OperationVO> saveOrUpdateOperation(
+            @Valid SaveOrUpdateOperationRequest saveOrUpdateOperationRequest) {
         Operation operation;
         if (StringUtils.isEmpty(saveOrUpdateOperationRequest.getOperationId())) {
             //新增
-            operation = permissionService.getOperationByName(saveOrUpdateOperationRequest.getOperationName());
+            operation = permissionService.getOperationByCode(saveOrUpdateOperationRequest.getOperationCode());
+
             if (operation != null) {
+                log.warn("operation add,operation already exist:{}", saveOrUpdateOperationRequest.getOperationCode());
                 throw new BusinessException(OPERATION_ALREADY_EXIST_ERROR);
             }
 
@@ -113,7 +119,8 @@ public class SystemAdminController {
     @PostMapping("permission/operation/set")
     @ApiOperation("权限操作设置")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> setPermissionOperation(PermissionOperationSetRequest permissionOperationSetRequest) {
+    public Result<Boolean> setPermissionOperation(
+            @Valid PermissionOperationSetRequest permissionOperationSetRequest) {
         Optional<Permission> optionalPermission = Optional.ofNullable(permissionService.getPermissionByPermissionId(permissionOperationSetRequest.getPermissionId()));
 
         return optionalPermission.map(permission -> {
@@ -137,7 +144,8 @@ public class SystemAdminController {
     @DeleteMapping("permission/operation/delete")
     @ApiOperation("权限操作删除")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> deletePermissionOperation(PermissionOperationDeleteRequest permissionOperationDeleteRequest) {
+    public Result<Boolean> deletePermissionOperation(
+            @Valid PermissionOperationDeleteRequest permissionOperationDeleteRequest) {
         permissionService.deletePermissionOperation(permissionOperationDeleteRequest.getPermissionId(), permissionOperationDeleteRequest.getOperationId());
         return Result.success(Boolean.TRUE);
     }
@@ -153,7 +161,8 @@ public class SystemAdminController {
     @PostMapping("menu/permission/set")
     @ApiOperation("目录权限设计")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> setMenuPermission(MenuPermissionSetRequest menuPermissionSetRequest) {
+    public Result<Boolean> setMenuPermission(
+            @Valid MenuPermissionSetRequest menuPermissionSetRequest) {
         PermissionSubjectProvider<Menu> permissionSubjectProvider =
                 permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.MENU);
         permissionSubjectProvider.addPermissionSubjectRel(menuPermissionSetRequest.getMenuId(), menuPermissionSetRequest.getPermissionId());
@@ -232,7 +241,7 @@ public class SystemAdminController {
     @DeleteMapping("menu/permission/delete")
     @ApiOperation("目录权限删除")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> deleteMenuPermission(MenuPermissionDeleteRequest menuPermissionDeleteRequest) {
+    public Result<Boolean> deleteMenuPermission(@Valid MenuPermissionDeleteRequest menuPermissionDeleteRequest) {
         PermissionSubjectProvider<Menu> permissionSubjectProvider =
                 permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.MENU);
         permissionSubjectProvider.deletePermissionSubjectRel(menuPermissionDeleteRequest.getMenuId(), menuPermissionDeleteRequest.getPermissionId());
@@ -242,13 +251,14 @@ public class SystemAdminController {
     @PostMapping("menu/saveOrUpdate")
     @ApiOperation("新增活更新目录")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<MenuVO> saveOrUpdateMenu(SaveOrUpdateMenuRequest saveOrUpdateMenuRequest) {
+    public Result<MenuVO> saveOrUpdateMenu(
+            @Valid SaveOrUpdateMenuRequest saveOrUpdateMenuRequest) {
         PermissionSubjectProvider<Menu> permissionSubjectProvider =
                 permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.MENU);
         Menu menu;
         if (StringUtils.isEmpty(saveOrUpdateMenuRequest.getMenuId())) {
             //新增
-            menu = permissionSubjectProvider.getPermissionSubjectByName(saveOrUpdateMenuRequest.getMenuName());
+            menu = permissionSubjectProvider.getPermissionSubjectByCode(saveOrUpdateMenuRequest.getMenuCode());
 
             if (menu != null) {
                 log.warn("add menu already exist:: menuName:{}", saveOrUpdateMenuRequest.getMenuName());
@@ -293,7 +303,8 @@ public class SystemAdminController {
     @PostMapping("role/permission/set")
     @ApiOperation("角色权限设置")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> setRolePermission(RolePermissionSetRequest rolePermissionSetRequest) {
+    public Result<Boolean> setRolePermission(
+            @Valid RolePermissionSetRequest rolePermissionSetRequest) {
         Optional<Role> optionalRole = Optional.ofNullable(permissionService.getRoleById(rolePermissionSetRequest.getRoleId()));
 
         return optionalRole.map(role -> {
@@ -317,7 +328,8 @@ public class SystemAdminController {
     @PostMapping("role/permission/delete")
     @ApiOperation("角色权限删除")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> deleteRolePermission(RolePermissionDeleteRequest rolePermissionDeleteRequest) {
+    public Result<Boolean> deleteRolePermission(
+            @Valid RolePermissionDeleteRequest rolePermissionDeleteRequest) {
         permissionService.deleteRolePermission(rolePermissionDeleteRequest.getRoleId(), rolePermissionDeleteRequest.getPermissionId());
         return Result.success(Boolean.TRUE);
     }
@@ -325,12 +337,14 @@ public class SystemAdminController {
     @PostMapping("permission/saveOrUpdate")
     @ApiOperation("保存或更新权限")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<PermissionVO> saveOrUpdatePermission(SaveOrUpdatePermissionRequest saveOrUpdatePermissionRequest) {
+    public Result<PermissionVO> saveOrUpdatePermission(
+            @Valid SaveOrUpdatePermissionRequest saveOrUpdatePermissionRequest) {
         Permission permission;
 
         if (StringUtils.isEmpty(saveOrUpdatePermissionRequest.getPermissionId())) {
-            permission = permissionService.getPermissionByName(saveOrUpdatePermissionRequest.getPermissionName());
+            permission = permissionService.getPermissionByCode(saveOrUpdatePermissionRequest.getPermissionCode());
             if (permission != null) {
+                log.warn("add permission, permission already exist:{}", saveOrUpdatePermissionRequest.getPermissionCode());
                 throw new BusinessException(PERMISSION_ALREADY_EXIST_ERROR);
             }
 
@@ -352,12 +366,14 @@ public class SystemAdminController {
     @PostMapping("role/saveOrUpdate")
     @ApiOperation("新增或更新角色")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<RoleVO> saveOrUpdateRole(SaveOrUpdateRoleRequest saveOrUpdateRoleRequest) {
+    public Result<RoleVO> saveOrUpdateRole(
+            @Valid SaveOrUpdateRoleRequest saveOrUpdateRoleRequest) {
         Role role;
         if (StringUtils.isEmpty(saveOrUpdateRoleRequest.getRoleId())) {
             //新增
-            role = permissionService.getRoleByName(saveOrUpdateRoleRequest.getRoleName());
+            role = permissionService.getRoleByCode(saveOrUpdateRoleRequest.getRoleCode());
             if (role != null) {
+                log.warn("role add, role already exist:{}", saveOrUpdateRoleRequest.getRoleCode());
                 throw new BusinessException(ROLE_ALREADY_EXIST_ERROR);
             }
 
@@ -400,10 +416,20 @@ public class SystemAdminController {
         return Result.success(SystemDataConverter.INSTATNCE.roleToVO(permissionService.getRoleById(roleId)));
     }
 
+
+    @GetMapping("role/list/query")
+    @ApiOperation("分页查询角色列表")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Result<PageData<RoleVO>> pageRoles(QueryRoleDTO queryRoleDTO, PageBean<Role> pageBean) {
+        return Result.success(
+                PageData.buildResult(permissionService.pageQueryRoles(queryRoleDTO, pageBean), SystemDataConverter.INSTATNCE::roleToVO));
+    }
+
     @PostMapping("user/role/set")
     @ApiOperation("设置用户角色")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> setUserRole(UserRoleSetRequest userRoleSetRequest) {
+    public Result<Boolean> setUserRole(
+            @Valid UserRoleSetRequest userRoleSetRequest) {
         Optional<User> optionalUser = Optional.ofNullable(userService.getUserByUserId(userRoleSetRequest.getUserId()));
 
         return optionalUser.map(user -> {
@@ -440,7 +466,8 @@ public class SystemAdminController {
     @DeleteMapping("user/role/delete")
     @ApiOperation("删除用户角色")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> deleteUserRole(UserRoleDeleteRequest userRoleDeleteRequest) {
+    public Result<Boolean> deleteUserRole(
+            @Valid UserRoleDeleteRequest userRoleDeleteRequest) {
         userService.deleteUserRole(userRoleDeleteRequest.getUserId(), userRoleDeleteRequest.getRoleId());
         return Result.success(Boolean.TRUE);
     }
@@ -448,13 +475,14 @@ public class SystemAdminController {
     @PostMapping("element/saveOrUpdate")
     @ApiOperation("保存或更新页面元素")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<ElementVO> saveOrUpdateElement(SaveOrUpdateElementRequest saveOrUpdateElementRequest) {
+    public Result<ElementVO> saveOrUpdateElement(
+            @Valid SaveOrUpdateElementRequest saveOrUpdateElementRequest) {
         PermissionSubjectProvider<Element> permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.ELEMENT);
 
         Element element;
         if (StringUtils.isEmpty(saveOrUpdateElementRequest.getElementId())) {
             //新增
-            element = permissionSubjectProvider.getPermissionSubjectByName(saveOrUpdateElementRequest.getElementName());
+            element = permissionSubjectProvider.getPermissionSubjectByCode(saveOrUpdateElementRequest.getElementName());
 
             if (element != null) {
                 throw new BusinessException(ELEMENT_ALREADY_EXIST_ERROR);
@@ -481,7 +509,8 @@ public class SystemAdminController {
     @PostMapping("element/permission/set")
     @ApiOperation("页面元素权限设置")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> setElementPermission(ElementPermissionSetRequest elementPermissionSetRequest) {
+    public Result<Boolean> setElementPermission(
+            @Valid ElementPermissionSetRequest elementPermissionSetRequest) {
         PermissionSubjectProvider<Element> permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.ELEMENT);
 
         Optional<Element> optionalElement = Optional.ofNullable(permissionSubjectProvider.getPermissionSubject(elementPermissionSetRequest.getElementId()));
@@ -509,7 +538,8 @@ public class SystemAdminController {
     @DeleteMapping("element/permission/delete")
     @ApiOperation("页面元素权限删除")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<Boolean> deleteElementPermission(ElementPermissionDeleteRequest elementPermissionDeleteRequest) {
+    public Result<Boolean> deleteElementPermission(
+            @Valid ElementPermissionDeleteRequest elementPermissionDeleteRequest) {
         PermissionSubjectProvider<Element> permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.ELEMENT);
         permissionSubjectProvider.deletePermissionSubjectRel(elementPermissionDeleteRequest.getElementId(), elementPermissionDeleteRequest.getPermissionId());
         return Result.success(Boolean.TRUE);

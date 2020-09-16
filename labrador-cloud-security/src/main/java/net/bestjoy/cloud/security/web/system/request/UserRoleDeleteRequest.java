@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /***
@@ -13,9 +14,12 @@ import java.io.Serializable;
 @Data
 @ToString
 public class UserRoleDeleteRequest implements Serializable {
+
+    @NotBlank(message = "用户id不能为空")
     @ApiModelProperty(value = "用户id", required = true)
     private String userId;
 
+    @NotBlank(message = "角色Id不能为空")
     @ApiModelProperty(value = "角色id", required = true)
     private String roleId;
 

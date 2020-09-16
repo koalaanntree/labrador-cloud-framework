@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
+import net.bestjoy.cloud.core.bean.PageBean;
 import net.bestjoy.cloud.core.error.BusinessException;
 import net.bestjoy.cloud.core.generator.IDGenerator;
 import net.bestjoy.cloud.security.context.SecurityContext;
+import net.bestjoy.cloud.security.core.dto.QueryRoleDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.MenuStatusEnum;
 import net.bestjoy.cloud.security.core.enums.MenuTypeEnum;
@@ -89,12 +91,17 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Role getRoleByName(String roleName) {
+    public Role getRoleByCode(String roleCode) {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("role_name", roleName);
-        queryWrapper.eq("system_id", SecurityContext.getSystemId());
+        queryWrapper.lambda().eq(Role::getSystemId, SecurityContext.getSystemId());
+        queryWrapper.lambda().eq(Role::getRoleCode, roleCode);
 
         return roleMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public IPage<Role> pageQueryRoles(QueryRoleDTO queryRoleDTO, PageBean<Role> pageBean) {
+        return roleMapper.selectPage(pageBean.getPage(), queryRoleDTO.buildQueryCondition());
     }
 
     @Override
@@ -144,11 +151,10 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Permission getPermissionByName(String permissionName) {
+    public Permission getPermissionByCode(String permissionCode) {
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("permission_name", permissionName);
-        queryWrapper.eq("system_id", SecurityContext.getSystemId());
-
+        queryWrapper.lambda().eq(Permission::getSystemId, SecurityContext.getSystemId());
+        queryWrapper.lambda().eq(Permission::getPermissionCode, permissionCode);
         return permissionMapper.selectOne(queryWrapper);
     }
 
@@ -268,11 +274,10 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Operation getOperationByName(String operationName) {
+    public Operation getOperationByCode(String operationCode) {
         QueryWrapper<Operation> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("operation_name", operationName);
-        queryWrapper.eq("system_id", SecurityContext.getSystemId());
-
+        queryWrapper.lambda().eq(Operation::getSystemId, SecurityContext.getSystemId());
+        queryWrapper.lambda().eq(Operation::getOperationCode, operationCode);
         return operationMapper.selectOne(queryWrapper);
     }
 }

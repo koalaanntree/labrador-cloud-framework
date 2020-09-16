@@ -1,6 +1,7 @@
 package net.bestjoy.cloud.security.core.entitiy;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
@@ -20,21 +21,31 @@ public class Permission extends BaseEntity<Long> {
     /**
      * 系统id
      */
+    @TableField("system_id")
     private String systemId;
     /**
      * 权限id
      */
+    @TableField("permission_id")
     private String permissionId;
 
     /**
      * 权限名
      */
+    @TableField("permission_name")
     private String permissionName;
+
+    /***
+     * 权限code,唯一
+     */
+    @TableField("permission_code")
+    private String permissionCode;
 
     /**
      * 权限类别
      */
     @EnumValue
+    @TableField("permission_type")
     private PermissionTypeEnum permissionType;
 
     /**

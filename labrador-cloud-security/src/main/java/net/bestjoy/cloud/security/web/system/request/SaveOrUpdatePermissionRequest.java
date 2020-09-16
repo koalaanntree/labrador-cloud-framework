@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 import net.bestjoy.cloud.security.core.enums.PermissionTypeEnum;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -18,8 +19,13 @@ public class SaveOrUpdatePermissionRequest implements Serializable {
     @ApiModelProperty("权限id，更新时必传")
     private String permissionId;
 
-    @ApiModelProperty("权限名称")
+    @NotBlank(message = "权限名称不能为空")
+    @ApiModelProperty(value = "权限名称", required = true)
     private String permissionName;
+
+    @NotBlank(message = "权限码不能为空")
+    @ApiModelProperty(value = "权限吗,唯一校验", required = true)
+    private String permissionCode;
 
     @ApiModelProperty("描述")
     private String description;

@@ -2,6 +2,8 @@ package net.bestjoy.cloud.security.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.bestjoy.cloud.core.bean.PageBean;
+import net.bestjoy.cloud.security.core.dto.QueryRoleDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.MenuTypeEnum;
 import net.bestjoy.cloud.security.core.enums.PermissionTypeEnum;
@@ -22,12 +24,20 @@ public interface PermissionService {
     Role getRoleById(String roleId);
 
     /**
-     * 获取角色
+     * 根据角色码，唯一查找角色
      *
-     * @param roleName
+     * @param roleCode
      * @return
      */
-    Role getRoleByName(String roleName);
+    Role getRoleByCode(String roleCode);
+
+    /***
+     * 分页查找角色列表
+     * @param queryRoleDTO
+     * @param pageBean
+     * @return
+     */
+    IPage<Role> pageQueryRoles(QueryRoleDTO queryRoleDTO, PageBean<Role> pageBean);
 
     /**
      * 添加角色
@@ -75,13 +85,12 @@ public interface PermissionService {
      */
     void updatePermission(Permission permission);
 
-    /**
-     * 根据名称查找唯一权限
-     *
-     * @param permissionName
+    /***
+     * 权限码唯一查找权限
+     * @param permissionCode
      * @return
      */
-    Permission getPermissionByName(String permissionName);
+    Permission getPermissionByCode(String permissionCode);
 
     /**
      * 根据权限id唯一查找
@@ -159,9 +168,9 @@ public interface PermissionService {
     Operation getOperationById(String operationId);
 
     /***
-     * 根据名称查找
-     * @param operationName
+     * 根据操作码唯一查找
+     * @param operationCode
      * @return
      */
-    Operation getOperationByName(String operationName);
+    Operation getOperationByCode(String operationCode);
 }
