@@ -44,6 +44,7 @@ public interface PermissionService {
 
     /**
      * 删除角色
+     * 会删除角色关联的用户
      *
      * @param roleId
      */

@@ -3,10 +3,8 @@ package net.bestjoy.cloud.security.web.system.response;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
-import net.bestjoy.cloud.security.core.entitiy.Menu;
 import net.bestjoy.cloud.security.core.enums.MenuStatusEnum;
 import net.bestjoy.cloud.security.core.enums.MenuTypeEnum;
-import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,7 +16,7 @@ import java.util.Date;
  */
 @Data
 @ToString
-public class MenuResponse implements Serializable {
+public class MenuVO implements Serializable {
     @ApiModelProperty("菜单id")
     private String menuId;
 
@@ -42,13 +40,4 @@ public class MenuResponse implements Serializable {
 
     @ApiModelProperty("创建时间")
     private Date createTime;
-
-    public static MenuResponse convert(Menu menu) {
-        if (menu == null) {
-            return null;
-        }
-        MenuResponse response = new MenuResponse();
-        BeanUtils.copyProperties(menu, response);
-        return response;
-    }
 }

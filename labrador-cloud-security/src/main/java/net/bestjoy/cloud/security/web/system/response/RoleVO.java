@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @ToString
-public class RoleResponse implements Serializable {
+public class RoleVO implements Serializable {
     @ApiModelProperty("角色id")
     private String roleId;
 
@@ -30,29 +30,29 @@ public class RoleResponse implements Serializable {
 
     @ApiModelProperty("创建时间")
     private Date createTime;
-
-    public static RoleResponse convert(Role role) {
-        if (role == null) {
-            return null;
-        }
-
-        RoleResponse response = new RoleResponse();
-        BeanUtils.copyProperties(role, response);
-
-        return response;
-    }
-
-    public static List<RoleResponse> convert(List<Role> roles) {
-
-        List<RoleResponse> list = new ArrayList<>();
-        if (CollectionUtils.isEmpty(roles)) {
-            return list;
-        }
-
-        roles.forEach(role -> {
-            list.add(convert(role));
-        });
-
-        return list;
-    }
+//
+//    public static RoleVO convert(Role role) {
+//        if (role == null) {
+//            return null;
+//        }
+//
+//        RoleVO response = new RoleVO();
+//        BeanUtils.copyProperties(role, response);
+//
+//        return response;
+//    }
+//
+//    public static List<RoleVO> convert(List<Role> roles) {
+//
+//        List<RoleVO> list = new ArrayList<>();
+//        if (CollectionUtils.isEmpty(roles)) {
+//            return list;
+//        }
+//
+//        roles.forEach(role -> {
+//            list.add(convert(role));
+//        });
+//
+//        return list;
+//    }
 }

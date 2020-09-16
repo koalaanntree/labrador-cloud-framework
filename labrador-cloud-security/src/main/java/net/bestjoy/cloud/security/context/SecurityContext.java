@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.security.converter.UserConverter;
 import net.bestjoy.cloud.security.core.AppUserDetails;
 import net.bestjoy.cloud.security.core.UserSession;
+import net.bestjoy.cloud.security.core.entitiy.Role;
 import net.bestjoy.cloud.security.core.error.UserNeedLoginException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 /***
@@ -22,7 +24,7 @@ public final class SecurityContext {
     /***
      * 系统id
      */
-    private  static String systemId;
+    private static String systemId;
     /***
      * 授权过滤url
      */
@@ -34,6 +36,14 @@ public final class SecurityContext {
      */
     public static String getCurrentUserId() {
         return getCurrentUser().getUserId();
+    }
+
+    /***
+     * 获取当前用户角色集合
+     * @return
+     */
+    public static Set<String> getCurrentUserRoleList() {
+        return getCurrentUser().getRoles();
     }
 
     /***

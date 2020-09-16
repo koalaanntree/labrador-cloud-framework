@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 @ToString
-public class MenuTreeResponse extends MenuResponse implements Serializable {
+public class MenuTreeResponse extends MenuVO implements Serializable {
     @ApiModelProperty("是否顶级目录")
     private boolean isTopMenu = false;
 

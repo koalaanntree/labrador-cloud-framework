@@ -3,6 +3,7 @@ package net.bestjoy.cloud.core.bean;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.bestjoy.cloud.core.converter.BeanConverter;
 import net.bestjoy.cloud.core.error.BusinessException;
 import net.bestjoy.cloud.core.error.CodeAndMessage;
 import net.bestjoy.cloud.core.error.ErrorCodeAndMessage;
@@ -78,15 +79,28 @@ public class Result<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> Result success(T result) {
+    public static <T> Result<T> success(T result) {
         return new Result<>(SUCCESS, SUCCESS_MSG, result);
+    }
+
+    /**
+     * 返回转换对象
+     *
+     * @param originData 原始数据
+     * @param converter  转换器
+     * @param <T>        返回对象类型
+     * @param <Origin>   原始数据类型
+     * @return 返回结果
+     */
+    public static <T, Origin> Result<T> success(Origin originData, BeanConverter<T, Origin> converter) {
+        return success(converter.convert(originData));
     }
 
     /***
      * 默认返回成功
      * @return
      */
-    public static Result<?> success() {
+    public static Result success() {
         return new Result(SUCCESS, SUCCESS_MSG);
     }
 
@@ -132,6 +146,6 @@ public class Result<T> implements Serializable {
      * @return
      */
     public boolean isSuccess() {
-        return SUCCESS.equals(code) ? true : false;
+        return SUCCESS.equals(code);
     }
 }

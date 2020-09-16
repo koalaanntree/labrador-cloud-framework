@@ -1,12 +1,10 @@
 package net.bestjoy.cloud.security.web.system.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.bean.PageBean;
 import net.bestjoy.cloud.core.bean.PageData;
-import net.bestjoy.cloud.core.bean.PageInfo;
 import net.bestjoy.cloud.core.bean.Result;
 import net.bestjoy.cloud.core.error.BusinessException;
 import net.bestjoy.cloud.security.annotation.IgnoreAuth;
@@ -18,6 +16,7 @@ import net.bestjoy.cloud.security.service.PermissionService;
 import net.bestjoy.cloud.security.service.PermissionSubjectContext;
 import net.bestjoy.cloud.security.service.PermissionSubjectProvider;
 import net.bestjoy.cloud.security.service.UserService;
+import net.bestjoy.cloud.security.web.system.converter.SystemDataConverter;
 import net.bestjoy.cloud.security.web.system.response.*;
 import net.bestjoy.cloud.security.web.system.request.*;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.bestjoy.cloud.security.core.error.AuthErrors.*;
 
@@ -54,29 +54,37 @@ public class SystemAdminController {
     @GetMapping("subject/role/list")
     @ApiOperation("获取权限主体需要的角色列表")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<List<RoleResponse>> listRequireRoleOfPermissionSubject(
+    public Result<List<RoleVO>> listRequireRoleOfPermissionSubject(
             @RequestParam String subjectId,
             @RequestParam PermissionTypeEnum permissionType) {
         PermissionSubjectProvider permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(permissionType);
-        return Result.success(RoleResponse.convert(permissionSubjectProvider.getSubjectRequireRoleList(subjectId)));
+
+        Optional<List<Role>> optional = Optional.ofNullable(permissionSubjectProvider.getSubjectRequireRoleList(subjectId));
+
+        return optional.map(roles -> Result.success(roles.stream().map(SystemDataConverter.INSTATNCE::roleToVO).collect(Collectors.toList()))).orElseGet(() -> Result.success(new ArrayList<>()));
     }
 
     @IgnoreAuth(pathInfo = "/v1/sys/subject/permission/list")
     @GetMapping("subject/permission/list")
     @ApiOperation("获取权限主体所属的权限列表")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<List<PermissionResponse>> listPermissionOfPermissionSubject(
+    public Result<List<PermissionVO>> listPermissionOfPermissionSubject(
             @RequestParam String subjectId,
             @RequestParam PermissionTypeEnum permissionType) {
         PermissionSubjectProvider permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(permissionType);
-        return Result.success(PermissionResponse.convert(permissionSubjectProvider.getSubjectPermissionList(subjectId)));
+
+        Optional<List<Permission>> optional = Optional.ofNullable(permissionSubjectProvider.getSubjectPermissionList(subjectId));
+
+        return optional.map(
+                permissions -> Result.success(permissions.stream().map(SystemDataConverter.INSTATNCE::permissionToVO).collect(Collectors.toList()))
+        ).orElseGet(() -> Result.success(new ArrayList<>()));
     }
 
 
     @PostMapping("operation/saveOrUpdate")
     @ApiOperation("新增或者更新操作")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<OperationResponse> saveOrUpdateOperation(SaveOrUpdateOperationRequest saveOrUpdateOperationRequest) {
+    public Result<OperationVO> saveOrUpdateOperation(SaveOrUpdateOperationRequest saveOrUpdateOperationRequest) {
         Operation operation;
         if (StringUtils.isEmpty(saveOrUpdateOperationRequest.getOperationId())) {
             //新增
@@ -99,7 +107,7 @@ public class SystemAdminController {
             permissionService.updateOperation(operation);
         }
 
-        return Result.success(OperationResponse.convert(operation));
+        return Result.success(SystemDataConverter.INSTATNCE.operationToVO(operation));
     }
 
     @PostMapping("permission/operation/set")
@@ -107,13 +115,20 @@ public class SystemAdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public Result<Boolean> setPermissionOperation(PermissionOperationSetRequest permissionOperationSetRequest) {
         Optional<Permission> optionalPermission = Optional.ofNullable(permissionService.getPermissionByPermissionId(permissionOperationSetRequest.getPermissionId()));
-        optionalPermission.orElseThrow(() -> new BusinessException(PERMISSION_NOT_FOUND_ERROR));
 
-        Optional<Operation> optionalOperation = Optional.ofNullable(permissionService.getOperationById(permissionOperationSetRequest.getOperationId()));
-        optionalOperation.orElseThrow(() -> new BusinessException(OPERATION_NOT_FOUND_ERROR));
-
-        permissionService.addPermissionOperation(optionalPermission.get().getPermissionId(), optionalOperation.get().getOperationId());
-        return Result.success(Boolean.TRUE);
+        return optionalPermission.map(permission -> {
+            Optional<Operation> optionalOperation = Optional.ofNullable(permissionService.getOperationById(permissionOperationSetRequest.getOperationId()));
+            return optionalOperation.map(operation -> {
+                permissionService.addPermissionOperation(permission.getPermissionId(), operation.getOperationId());
+                return Result.success(Boolean.TRUE);
+            }).orElseThrow(() -> {
+                log.warn("set permission operation, operation not found:{}", permissionOperationSetRequest.getOperationId());
+                throw new BusinessException(OPERATION_NOT_FOUND_ERROR);
+            });
+        }).orElseThrow(() -> {
+            log.warn("set permission operation, permission not found:{}", permissionOperationSetRequest.getPermissionId());
+            throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
+        });
     }
 
     @DeleteMapping("permission/operation/delete")
@@ -127,22 +142,9 @@ public class SystemAdminController {
     @GetMapping("role/permission/query")
     @ApiOperation("角色权限列表查询")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<PageData<PermissionResponse>> queryRolePermissionList(@RequestParam String roleId, PageBean<Permission> pageBean) {
-        IPage<Permission> permissionIPage = permissionService.queryRolePermission(pageBean.getPage(), roleId);
-
-        if (permissionIPage == null || CollectionUtils.isEmpty(permissionIPage.getRecords())) {
-            return Result.success(PageData.emptyResult());
-        }
-
-        List<PermissionResponse> list = new ArrayList<>();
-        permissionIPage.getRecords().forEach(permission -> {
-            list.add(PermissionResponse.convert(permission));
-        });
-
-        return Result.success(PageData.builderPageData(list,
-                PageInfo.builder().current(permissionIPage.getCurrent())
-                        .size(permissionIPage.getSize())
-                        .total(permissionIPage.getTotal()).build()));
+    public Result<PageData<PermissionVO>> queryRolePermissionList(@RequestParam String roleId, PageBean<Permission> pageBean) {
+        return Result.success(
+                PageData.buildResult(permissionService.queryRolePermission(pageBean.getPage(), roleId), SystemDataConverter.INSTATNCE::permissionToVO));
     }
 
     @PostMapping("menu/permission/set")
@@ -166,32 +168,32 @@ public class SystemAdminController {
 
         List<Menu> publishedMenuList = permissionService.getPublishedMenuList(parentMenuId, menuType);
 
-        List<MenuResponse> topMenuList = new ArrayList<>();
+        List<MenuVO> topMenuList = new ArrayList<>();
+        List<MenuTreeResponse> result = new ArrayList<>();
 
         if (CollectionUtils.isEmpty(publishedMenuList)) {
-            return Result.success(topMenuList);
+            return Result.success(result);
         }
 
-        Map<String, List<MenuResponse>> subMenuMap = new HashMap<>(16);
+        Map<String, List<MenuVO>> subMenuMap = new HashMap<>(16);
 
         for (Menu menu : publishedMenuList) {
             if (menu.getParentMenuId() == null
                     || menu.getParentMenuId().equals(parentMenuId)) {
                 //top menu
-                topMenuList.add(MenuResponse.convert(menu));
+                topMenuList.add(SystemDataConverter.INSTATNCE.menuToVO(menu));
                 continue;
             }
 
             if (subMenuMap.containsKey(menu.getParentMenuId())) {
-                subMenuMap.get(menu.getParentMenuId()).add(MenuResponse.convert(menu));
+                subMenuMap.get(menu.getParentMenuId()).add(SystemDataConverter.INSTATNCE.menuToVO(menu));
             } else {
-                subMenuMap.put(menu.getParentMenuId(), new ArrayList<MenuResponse>() {{
-                    add(MenuResponse.convert(menu));
+                subMenuMap.put(menu.getParentMenuId(), new ArrayList<MenuVO>() {{
+                    add(SystemDataConverter.INSTATNCE.menuToVO(menu));
                 }});
             }
         }
 
-        List<MenuTreeResponse> result = new ArrayList<>();
         topMenuList.forEach(topMenu -> {
             MenuTreeResponse topMenuResponse = buildMenuTreeResponse(topMenu, subMenuMap);
             topMenuResponse.setTopMenu(true);
@@ -208,11 +210,11 @@ public class SystemAdminController {
      * @param subMenuMap
      * @return
      */
-    private MenuTreeResponse buildMenuTreeResponse(MenuResponse menuResponse, Map<String, List<MenuResponse>> subMenuMap) {
+    private MenuTreeResponse buildMenuTreeResponse(MenuVO menuResponse, Map<String, List<MenuVO>> subMenuMap) {
         MenuTreeResponse menuTreeResponse = new MenuTreeResponse();
         BeanUtils.copyProperties(menuResponse, menuTreeResponse);
         //获取该目录下的子目录
-        List<MenuResponse> subMenuList = subMenuMap.get(menuTreeResponse.getMenuId());
+        List<MenuVO> subMenuList = subMenuMap.get(menuTreeResponse.getMenuId());
         if (!CollectionUtils.isEmpty(subMenuList)) {
             menuTreeResponse.setHasSubMenu(true);
             List<MenuTreeResponse> subMenuTreeList = new ArrayList<>();
@@ -237,7 +239,7 @@ public class SystemAdminController {
     @PostMapping("menu/saveOrUpdate")
     @ApiOperation("新增活更新目录")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<MenuResponse> saveOrUpdateMenu(SaveOrUpdateMenuRequest saveOrUpdateMenuRequest) {
+    public Result<MenuVO> saveOrUpdateMenu(SaveOrUpdateMenuRequest saveOrUpdateMenuRequest) {
         PermissionSubjectProvider<Menu> permissionSubjectProvider =
                 permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.MENU);
         Menu menu;
@@ -246,6 +248,7 @@ public class SystemAdminController {
             menu = permissionSubjectProvider.getPermissionSubjectByName(saveOrUpdateMenuRequest.getMenuName());
 
             if (menu != null) {
+                log.warn("add menu already exist:: menuName:{}", saveOrUpdateMenuRequest.getMenuName());
                 throw new BusinessException(MENU_ALREADY_EXIST_ERROR);
             }
 
@@ -262,7 +265,7 @@ public class SystemAdminController {
             BeanUtils.copyProperties(saveOrUpdateMenuRequest, menu);
             permissionSubjectProvider.updatePermissionSubject(menu);
         }
-        return Result.success(MenuResponse.convert(menu));
+        return Result.success(SystemDataConverter.INSTATNCE.menuToVO(menu));
     }
 
     @PostMapping("menu/publish")
@@ -273,13 +276,15 @@ public class SystemAdminController {
                 permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.MENU);
 
         Optional<Menu> menuOptional = Optional.ofNullable(permissionSubjectProvider.getPermissionSubject(menuId));
-        menuOptional.orElseThrow(() -> new BusinessException(MENU_NOT_FOUND_ERROR));
-        menuOptional.ifPresent(menu -> {
+
+        return menuOptional.map(menu -> {
             menu.setMenuStatus(MenuStatusEnum.PUBLISHED);
             permissionSubjectProvider.updatePermissionSubject(menu);
-
+            return Result.success(Boolean.TRUE);
+        }).orElseThrow(() -> {
+            log.warn("publish menu ,menu not found:{}", menuId);
+            throw new BusinessException(MENU_NOT_FOUND_ERROR);
         });
-        return Result.success(Boolean.TRUE);
     }
 
     @PostMapping("role/permission/set")
@@ -287,13 +292,20 @@ public class SystemAdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public Result<Boolean> setRolePermission(RolePermissionSetRequest rolePermissionSetRequest) {
         Optional<Role> optionalRole = Optional.ofNullable(permissionService.getRoleById(rolePermissionSetRequest.getRoleId()));
-        optionalRole.orElseThrow(() -> new BusinessException(ROLE_NOT_FOUND_ERROR));
 
-        Optional<Permission> optionalPermission = Optional.ofNullable(permissionService.getPermissionByPermissionId(rolePermissionSetRequest.getPermissionId()));
-        optionalPermission.orElseThrow(() -> new BusinessException(PERMISSION_NOT_FOUND_ERROR));
-
-        permissionService.addRolePermission(optionalRole.get().getRoleId(), optionalPermission.get().getPermissionId());
-        return Result.success(Boolean.TRUE);
+        return optionalRole.map(role -> {
+            Optional<Permission> optionalPermission = Optional.ofNullable(permissionService.getPermissionByPermissionId(rolePermissionSetRequest.getPermissionId()));
+            return optionalPermission.map(permission -> {
+                permissionService.addRolePermission(role.getRoleId(), permission.getPermissionId());
+                return Result.success(Boolean.TRUE);
+            }).orElseThrow(() -> {
+                log.warn("role permission set, permission not found:{}", rolePermissionSetRequest.getPermissionId());
+                throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
+            });
+        }).orElseThrow(() -> {
+            log.warn("role permission set, role not found:{}", rolePermissionSetRequest.getRoleId());
+            throw new BusinessException(ROLE_NOT_FOUND_ERROR);
+        });
     }
 
     @PostMapping("role/permission/delete")
@@ -307,7 +319,7 @@ public class SystemAdminController {
     @PostMapping("permission/saveOrUpdate")
     @ApiOperation("保存或更新权限")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<PermissionResponse> saveOrUpdatePermission(SaveOrUpdatePermissionRequest saveOrUpdatePermissionRequest) {
+    public Result<PermissionVO> saveOrUpdatePermission(SaveOrUpdatePermissionRequest saveOrUpdatePermissionRequest) {
         Permission permission;
 
         if (StringUtils.isEmpty(saveOrUpdatePermissionRequest.getPermissionId())) {
@@ -328,13 +340,13 @@ public class SystemAdminController {
             permissionService.updatePermission(permission);
         }
 
-        return Result.success(PermissionResponse.convert(permission));
+        return Result.success(permission, SystemDataConverter.INSTATNCE::permissionToVO);
     }
 
     @PostMapping("role/saveOrUpdate")
     @ApiOperation("新增或更新角色")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<RoleResponse> saveOrUpdateRole(SaveOrUpdateRoleRequest saveOrUpdateRoleRequest) {
+    public Result<RoleVO> saveOrUpdateRole(SaveOrUpdateRoleRequest saveOrUpdateRoleRequest) {
         Role role;
         if (StringUtils.isEmpty(saveOrUpdateRoleRequest.getRoleId())) {
             //新增
@@ -357,22 +369,29 @@ public class SystemAdminController {
             permissionService.updateRole(role);
         }
 
-        return Result.success(RoleResponse.convert(role));
+        return Result.success(SystemDataConverter.INSTATNCE.roleToVO(role));
     }
 
     @DeleteMapping("role/delete")
     @ApiOperation("删除角色")
     @PreAuthorize("hasRole('ADMIN')")
     public Result<Boolean> deleteRole(@RequestParam String roleId) {
-        permissionService.deleteRole(roleId);
-        return Result.success(Boolean.TRUE);
+        Optional<Role> optionalRole = Optional.ofNullable(permissionService.getRoleById(roleId));
+
+        return optionalRole.map(role -> {
+            permissionService.deleteRole(role.getRoleId());
+            return Result.success(Boolean.TRUE);
+        }).orElseThrow(() -> {
+            log.warn("delete role, role not found:{}", roleId);
+            throw new BusinessException(ROLE_NOT_FOUND_ERROR);
+        });
     }
 
     @GetMapping("role/get")
     @ApiOperation("查找角色")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<RoleResponse> getRole(@RequestParam String roleId) {
-        return Result.success(RoleResponse.convert(permissionService.getRoleById(roleId)));
+    public Result<RoleVO> getRole(@RequestParam String roleId) {
+        return Result.success(SystemDataConverter.INSTATNCE.roleToVO(permissionService.getRoleById(roleId)));
     }
 
     @PostMapping("user/role/set")
@@ -380,21 +399,33 @@ public class SystemAdminController {
     @PreAuthorize("hasRole('ADMIN')")
     public Result<Boolean> setUserRole(UserRoleSetRequest userRoleSetRequest) {
         Optional<User> optionalUser = Optional.ofNullable(userService.getUserByUserId(userRoleSetRequest.getUserId()));
-        optionalUser.orElseThrow(() -> new BusinessException(USER_NOT_FOUND_ERROR));
 
-        Optional<Role> optionalRole = Optional.ofNullable(permissionService.getRoleById(userRoleSetRequest.getRoleId()));
-        optionalRole.orElseThrow(() -> new BusinessException(ROLE_NOT_FOUND_ERROR));
+        return optionalUser.map(user -> {
+            Optional<Role> optionalRole = Optional.ofNullable(permissionService.getRoleById(userRoleSetRequest.getRoleId()));
+            return optionalRole.map(role -> {
+                UserRole userRole = new UserRole(user.getUserId(), role.getRoleId());
+                userService.addUserRole(userRole);
+                return Result.success(Boolean.TRUE);
+            }).orElseThrow(() -> {
+                log.warn("set user role, role not found:{}", userRoleSetRequest.getRoleId());
+                throw new BusinessException(ROLE_NOT_FOUND_ERROR);
+            });
+        }).orElseThrow(() -> {
+            log.warn("set user role, user not found:{}", userRoleSetRequest.getUserId());
+            throw new BusinessException(USER_NOT_FOUND_ERROR);
+        });
 
-        UserRole userRole = new UserRole(optionalUser.get().getUserId(), optionalRole.get().getRoleId());
-        userService.addUserRole(userRole);
-
-        return Result.success(Boolean.TRUE);
     }
 
     @GetMapping("user/role/list")
     @ApiOperation("用户角色列表，不分页")
-    public Result<List<RoleResponse>> getUserRoleList(@RequestParam String userId) {
-        return Result.success(RoleResponse.convert(userService.getUserRoles(userId)));
+    @PreAuthorize("hasRole('ADMIN')")
+    public Result<List<RoleVO>> getUserRoleList(@RequestParam String userId) {
+
+        Optional<List<Role>> optional = Optional.ofNullable(userService.getUserRoles(userId));
+
+        return optional.map(roles -> Result.success(roles.stream().map(SystemDataConverter.INSTATNCE::roleToVO).collect(Collectors.toList())))
+                .orElseGet(() -> Result.success(new ArrayList<>()));
     }
 
     @DeleteMapping("user/role/delete")
@@ -408,7 +439,7 @@ public class SystemAdminController {
     @PostMapping("element/saveOrUpdate")
     @ApiOperation("保存或更新页面元素")
     @PreAuthorize("hasRole('ADMIN')")
-    public Result<ElementResponse> saveOrUpdateElement(SaveOrUpdateElementRequest saveOrUpdateElementRequest) {
+    public Result<ElementVO> saveOrUpdateElement(SaveOrUpdateElementRequest saveOrUpdateElementRequest) {
         PermissionSubjectProvider<Element> permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.ELEMENT);
 
         Element element;
@@ -435,7 +466,7 @@ public class SystemAdminController {
             permissionSubjectProvider.updatePermissionSubject(element);
         }
 
-        return Result.success(ElementResponse.convert(element));
+        return Result.success(SystemDataConverter.INSTATNCE.elementToVO(element));
     }
 
     @PostMapping("element/permission/set")
@@ -445,13 +476,22 @@ public class SystemAdminController {
         PermissionSubjectProvider<Element> permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.ELEMENT);
 
         Optional<Element> optionalElement = Optional.ofNullable(permissionSubjectProvider.getPermissionSubject(elementPermissionSetRequest.getElementId()));
-        optionalElement.orElseThrow(() -> new BusinessException(ELEMENT_NOT_FOUND_ERROR));
 
-        Optional<Permission> optionalPermission = Optional.ofNullable(permissionService.getPermissionByPermissionId(elementPermissionSetRequest.getPermissionId()));
-        optionalPermission.orElseThrow(() -> new BusinessException(PERMISSION_NOT_FOUND_ERROR));
-
-        permissionSubjectProvider.addPermissionSubjectRel(optionalElement.get().getElementId(), optionalPermission.get().getPermissionId());
-        return Result.success(Boolean.TRUE);
+        return optionalElement.map(element -> {
+            //设置element permission rel
+            Optional<Permission> optionalPermission =
+                    Optional.ofNullable(permissionService.getPermissionByPermissionId(elementPermissionSetRequest.getPermissionId()));
+            return optionalPermission.map(permission -> {
+                permissionSubjectProvider.addPermissionSubjectRel(element.getElementId(), permission.getPermissionId());
+                return Result.success(Boolean.TRUE);
+            }).orElseThrow(() -> {
+                log.warn("set element permission, permission not found:{}", elementPermissionSetRequest.getPermissionId());
+                throw new BusinessException(PERMISSION_NOT_FOUND_ERROR);
+            });
+        }).orElseThrow(() -> {
+            log.warn("set element permission, menu not found:{}", elementPermissionSetRequest.getElementId());
+            throw new BusinessException(ELEMENT_NOT_FOUND_ERROR);
+        });
     }
 
     @DeleteMapping("element/permission/delete")
@@ -470,12 +510,14 @@ public class SystemAdminController {
         PermissionSubjectProvider<Menu> permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.MENU);
 
         Optional<Menu> menuOptional = Optional.ofNullable(permissionSubjectProvider.getPermissionSubject(menuId));
-        menuOptional.orElseThrow(() -> new BusinessException(MENU_NOT_FOUND_ERROR));
 
-        menuOptional.ifPresent(menu -> {
+        return menuOptional.map(menu -> {
             permissionSubjectProvider.deleteSubject(menu.getMenuId());
+            return Result.success(Boolean.TRUE);
+        }).orElseThrow(() -> {
+            log.warn("delete menu not found:{}", menuId);
+            throw new BusinessException(MENU_NOT_FOUND_ERROR);
         });
-        return Result.success(Boolean.TRUE);
     }
 
     @DeleteMapping("element/delete")
@@ -485,11 +527,12 @@ public class SystemAdminController {
         PermissionSubjectProvider<Element> permissionSubjectProvider = permissionSubjectContext.getPermissionSubjectProvider(PermissionTypeEnum.ELEMENT);
 
         Optional<Element> elementOptional = Optional.ofNullable(permissionSubjectProvider.getPermissionSubject(elementId));
-        elementOptional.orElseThrow(() -> new BusinessException(ELEMENT_NOT_FOUND_ERROR));
-
-        elementOptional.ifPresent(element -> {
+        return elementOptional.map(element -> {
             permissionSubjectProvider.deleteSubject(element.getElementId());
+            return Result.success(Boolean.TRUE);
+        }).orElseThrow(() -> {
+            log.warn("delete element :{} not found", elementId);
+            throw new BusinessException(ELEMENT_NOT_FOUND_ERROR);
         });
-        return Result.success(Boolean.TRUE);
     }
 }

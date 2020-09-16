@@ -59,7 +59,7 @@ public final class SubResult<T> extends Result {
      * @return
      */
     public static boolean isSuccess(SubResult result) {
-        return (result != null && SUCCESS.equals(result.getCode())) ? true : false;
+        return result != null && SUCCESS.equals(result.getCode());
     }
 
     /***

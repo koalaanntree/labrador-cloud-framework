@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Data
 @ToString
-public class PermissionResponse implements Serializable {
+public class PermissionVO implements Serializable {
     @ApiModelProperty("权限id")
     private String permissionId;
 
@@ -35,28 +35,4 @@ public class PermissionResponse implements Serializable {
 
     @ApiModelProperty("创建时间")
     private Date createTime;
-
-    public static PermissionResponse convert(Permission permission) {
-        if (permission == null) {
-            return null;
-        }
-
-        PermissionResponse response = new PermissionResponse();
-        BeanUtils.copyProperties(permission, response);
-        return response;
-    }
-
-    public static List<PermissionResponse> convert(List<Permission> permissionList) {
-
-        List<PermissionResponse> list = new ArrayList<>();
-        if (CollectionUtils.isEmpty(permissionList)) {
-            return list;
-        }
-
-        permissionList.forEach(permission -> {
-            list.add(convert(permission));
-        });
-
-        return list;
-    }
 }

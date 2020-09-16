@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Data
 @ToString
-public class OperationResponse implements Serializable {
+public class OperationVO implements Serializable {
 
     @ApiModelProperty("操作id")
     private String operationId;
@@ -28,13 +28,4 @@ public class OperationResponse implements Serializable {
 
     @ApiModelProperty("创建时间")
     private Date createTime;
-
-    public static OperationResponse convert(Operation operation) {
-        if (operation == null) {
-            return null;
-        }
-        OperationResponse response = new OperationResponse();
-        BeanUtils.copyProperties(operation, response);
-        return response;
-    }
 }

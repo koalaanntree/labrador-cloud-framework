@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.bestjoy.cloud.core.converter.BeanConverter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -31,22 +32,6 @@ public class PageData<T> {
     private PageInfo pageInfo;
 
     /**
-     * 装换bean
-     *
-     * @param <R> 返回结果
-     * @param <O> 原始结果
-     */
-    public interface BeanConverter<R, O> {
-        /**
-         * 类型装换
-         *
-         * @param o 原始数据
-         * @return 转换数据
-         */
-        R convert(O o);
-    }
-
-    /**
      * 构造分页返回结果
      *
      * @param page
@@ -70,7 +55,7 @@ public class PageData<T> {
 
 
     public static <T> PageData<T> builderPageData(List<T> list, PageInfo pageInfo) {
-        PageData<T> pageData = new PageData();
+        PageData<T> pageData = new PageData<>();
         pageData.setRecords(list);
         pageData.setPageInfo(pageInfo);
         return pageData;
@@ -86,7 +71,7 @@ public class PageData<T> {
      */
     public static <T> PageData<T> emptyResult(long current, long size, long total) {
 
-        return builderPageData(new ArrayList(), PageInfo.builder().current(current).total(total).size(size).build());
+        return builderPageData(new ArrayList<>(), PageInfo.builder().current(current).total(total).size(size).build());
     }
 
     /***
