@@ -1,7 +1,7 @@
 package net.bestjoy.cloud.security.runner;
 
 import lombok.extern.slf4j.Slf4j;
-import net.bestjoy.cloud.security.config.AuthorizationProperties;
+import net.bestjoy.cloud.security.config.SecurityProperties;
 import net.bestjoy.cloud.security.context.SecurityContext;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.SystemStateEnum;
@@ -31,7 +31,7 @@ public class SystemRunner implements ApplicationRunner {
     private static final String ADMIN_DEFAULT_PWD = "bt#123";
 
     @Autowired
-    private AuthorizationProperties authorizationProperties;
+    private SecurityProperties securityProperties;
     @Autowired
     private SystemInfoService systemInfoService;
     @Autowired
@@ -44,24 +44,24 @@ public class SystemRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         SystemInfo systemInfo =
-                systemInfoService.getSystemInfoByName(authorizationProperties.getSystemName());
+                systemInfoService.getSystemInfoByName(securityProperties.getSystemName());
 
         if (systemInfo == null) {
             systemInfo = new SystemInfo();
-            systemInfo.setSystemName(authorizationProperties.getSystemName());
-            systemInfo.setCurrentVersion(authorizationProperties.getSystemVersion());
-            systemInfo.setDescription(authorizationProperties.getSystemDescription());
-            systemInfo.setSystemHomepage(authorizationProperties.getSystemHomepage());
+            systemInfo.setSystemName(securityProperties.getSystemName());
+            systemInfo.setCurrentVersion(securityProperties.getSystemVersion());
+            systemInfo.setDescription(securityProperties.getSystemDescription());
+            systemInfo.setSystemHomepage(securityProperties.getSystemHomepage());
             systemInfo.setLastPublishTime(new Date());
             systemInfo.setSystemState(SystemStateEnum.RUNNING);
 
             systemInfoService.saveSystemInfo(systemInfo);
         } else {
-            systemInfo.setSystemHomepage(authorizationProperties.getSystemHomepage());
+            systemInfo.setSystemHomepage(securityProperties.getSystemHomepage());
             systemInfo.setSystemState(SystemStateEnum.RUNNING);
             systemInfo.setLastPublishTime(new Date());
-            systemInfo.setCurrentVersion(authorizationProperties.getSystemVersion());
-            systemInfo.setDescription(authorizationProperties.getSystemDescription());
+            systemInfo.setCurrentVersion(securityProperties.getSystemVersion());
+            systemInfo.setDescription(securityProperties.getSystemDescription());
 
             systemInfoService.updateSystemInfo(systemInfo);
         }
@@ -83,6 +83,7 @@ public class SystemRunner implements ApplicationRunner {
             if (adminRole == null) {
                 adminRole = new Role();
                 adminRole.setRoleName(ADMIN_ROLE);
+                adminRole.setRoleCode(ADMIN_ROLE);
                 adminRole.setDescription("管理员角色");
                 permissionService.addRole(adminRole);
             }

@@ -8,6 +8,8 @@ import net.bestjoy.cloud.core.bean.PageBean;
 import net.bestjoy.cloud.core.error.BusinessException;
 import net.bestjoy.cloud.core.generator.IDGenerator;
 import net.bestjoy.cloud.security.context.SecurityContext;
+import net.bestjoy.cloud.security.core.dto.QueryMenuDTO;
+import net.bestjoy.cloud.security.core.dto.QueryOperationDTO;
 import net.bestjoy.cloud.security.core.dto.QueryRoleDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.MenuStatusEnum;
@@ -200,7 +202,7 @@ public class PermissionServiceImpl implements PermissionService {
     public IPage<Permission> queryRolePermission(Page<Permission> page, String roleId) {
         QueryWrapper<RolePermission> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("role_id", roleId);
-        queryWrapper.eq("system_id", SecurityContext.getSystemId());
+        queryWrapper.eq("permission.system_id", SecurityContext.getSystemId());
         queryWrapper.orderByDesc("create_time");
 
         return rolePermissionMapper.pageRolePermissionOfRole(page, queryWrapper);
@@ -217,6 +219,25 @@ public class PermissionServiceImpl implements PermissionService {
         return true;
     }
 
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void deleteOperation(String operationId) {
+        Operation operation = this.getOperationById(operationId);
+
+        if (operation == null) {
+            log.warn("operation:{} not found.", operationId);
+            throw new BusinessException(OPERATION_NOT_FOUND_ERROR);
+        }
+        //删除操作
+        QueryWrapper<Operation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Operation::getOperationId, operationId);
+        operationMapper.delete(queryWrapper);
+
+        //删除rel
+        QueryWrapper<PermissionOperation> permissionOperationQueryWrapper = new QueryWrapper<>();
+        permissionOperationQueryWrapper.lambda().eq(PermissionOperation::getOperationId, operationId);
+        permissionOperationMapper.delete(permissionOperationQueryWrapper);
+    }
 
     @Override
     public void saveOperation(Operation operation) {
@@ -279,5 +300,15 @@ public class PermissionServiceImpl implements PermissionService {
         queryWrapper.lambda().eq(Operation::getSystemId, SecurityContext.getSystemId());
         queryWrapper.lambda().eq(Operation::getOperationCode, operationCode);
         return operationMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public IPage<Operation> queryOperation(Page<Operation> page, QueryOperationDTO queryOperationDTO) {
+        return operationMapper.selectPage(page, queryOperationDTO.buildQueryCondition());
+    }
+
+    @Override
+    public IPage<Menu> queryMenu(Page<Menu> page, QueryMenuDTO queryMenuDTO) {
+        return menuMapper.selectPage(page, queryMenuDTO.buildQueryCondition());
     }
 }

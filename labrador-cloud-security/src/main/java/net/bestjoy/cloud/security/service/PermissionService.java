@@ -3,6 +3,8 @@ package net.bestjoy.cloud.security.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.bestjoy.cloud.core.bean.PageBean;
+import net.bestjoy.cloud.security.core.dto.QueryMenuDTO;
+import net.bestjoy.cloud.security.core.dto.QueryOperationDTO;
 import net.bestjoy.cloud.security.core.dto.QueryRoleDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.MenuTypeEnum;
@@ -132,6 +134,12 @@ public interface PermissionService {
      */
     boolean hasOperation(String operationId);
 
+    /***
+     * 删除操作，并删除与之相关联的权限关系
+     * @param operationId
+     */
+    void deleteOperation(String operationId);
+
     /**
      * 保存操作
      *
@@ -173,4 +181,21 @@ public interface PermissionService {
      * @return
      */
     Operation getOperationByCode(String operationCode);
+
+    /**
+     * 分页查找权限列表
+     *
+     * @param page              分页参数
+     * @param queryOperationDTO 查询条件
+     * @return
+     */
+    IPage<Operation> queryOperation(Page<Operation> page, QueryOperationDTO queryOperationDTO);
+
+    /***
+     * 分页查找menu，不区分状态
+     * @param page
+     * @param queryMenuDTO
+     * @return
+     */
+    IPage<Menu> queryMenu(Page<Menu> page, QueryMenuDTO queryMenuDTO);
 }

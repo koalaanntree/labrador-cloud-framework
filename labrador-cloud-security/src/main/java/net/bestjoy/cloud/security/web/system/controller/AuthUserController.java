@@ -3,6 +3,7 @@ package net.bestjoy.cloud.security.web.system.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.bean.PageBean;
 import net.bestjoy.cloud.core.bean.PageData;
 import net.bestjoy.cloud.core.bean.Result;
@@ -35,6 +36,7 @@ import static net.bestjoy.cloud.security.core.error.AuthErrors.PERMISSION_NOT_FO
 /**
  * @author ray
  */
+@Slf4j
 @Api("用户api-v1")
 @RestController
 @RequestMapping("v1/user")
@@ -49,7 +51,7 @@ public class AuthUserController {
     @GetMapping("list")
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("用户列表（管理员权限）")
-    public Result<PageData<UserDTO>> listUser(QueryUserDTO queryUserDTO, PageBean pageBean) {
+    public Result<PageData<UserDTO>> listUser(QueryUserDTO queryUserDTO, PageBean<User> pageBean) {
         IPage<User> pageUser = userService.pageQueryUser(pageBean, queryUserDTO);
 
         PageData<UserDTO> data = PageData.buildResult(pageUser, UserConverter.INSTANCE::userToDTO);
@@ -58,19 +60,21 @@ public class AuthUserController {
 
     @GetMapping("permission/check")
     @ApiOperation("当前用户权限(权限名、单个)检查")
-    public Result<Boolean> checkPermission(@RequestParam String permissionName) {
-        Optional<Permission> permissionOption = Optional.ofNullable(permissionService.getPermissionByName(permissionName));
-        permissionOption.orElseThrow(() -> new BusinessException(PERMISSION_NOT_FOUND_ERROR));
+    public Result<Boolean> checkPermission(@RequestParam String permissionCode) {
+        Optional<Permission> permissionOption = Optional.ofNullable(permissionService.getPermissionByCode(permissionCode));
 
-        UserSession userSession = SecurityContext.getCurrentUser();
+        return permissionOption.map(permission -> {
+            UserSession userSession = SecurityContext.getCurrentUser();
 
-        Optional<List<String>> optional = Optional.ofNullable(userService.getUserPermissionIdList(userSession.getUserId()));
+            Optional<List<String>> optional = Optional.ofNullable(
+                    userService.getUserPermissionIdList(userSession.getUserId()));
 
-        return optional
-                //判断当前用户是否拥有角色权限
-                .filter(permissionIds -> permissionIds.contains(permissionOption.get().getPermissionId()))
-                .map(permissionIds -> Result.success(Boolean.TRUE))
-                .orElseGet(() -> Result.success(Boolean.FALSE));
+            return optional.filter(permissionIds -> permissionIds.contains(permission.getPermissionId()))
+                    .map((permissionId) -> Result.success(Boolean.TRUE)).orElseGet(() -> Result.success(Boolean.FALSE));
+        }).orElseThrow(() -> {
+            log.warn("permission check,permission not found:{}", permissionCode);
+            return new BusinessException(PERMISSION_NOT_FOUND_ERROR);
+        });
     }
 
     @GetMapping("permission/list")

@@ -20,6 +20,9 @@ public class ElementVO implements Serializable {
     @ApiModelProperty("页面元素名称")
     private String elementName;
 
+    @ApiModelProperty("页面元素码")
+    private String elementCode;
+
     @ApiModelProperty("页面元素描述")
     private String description;
 

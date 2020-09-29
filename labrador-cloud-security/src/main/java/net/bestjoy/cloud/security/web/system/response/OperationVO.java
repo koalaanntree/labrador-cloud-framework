@@ -23,6 +23,9 @@ public class OperationVO implements Serializable {
     @ApiModelProperty("操作名称")
     private String operationName;
 
+    @ApiModelProperty("操作码")
+    private String operationCode;
+
     @ApiModelProperty("操作描述")
     private String description;
 

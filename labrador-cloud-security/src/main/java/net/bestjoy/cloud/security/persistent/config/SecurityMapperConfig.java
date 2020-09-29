@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @MapperScan("net.bestjoy.cloud.security.persistent.repository")
-public class AuthorizationMapperConfig {
+public class SecurityMapperConfig {
 }

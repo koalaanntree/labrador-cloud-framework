@@ -27,6 +27,9 @@ public class PermissionVO implements Serializable {
     @ApiModelProperty("权限名称")
     private String permissionName;
 
+    @ApiModelProperty("权限码")
+    private String permissionCode;
+
     @ApiModelProperty("权限描述")
     private String description;
 

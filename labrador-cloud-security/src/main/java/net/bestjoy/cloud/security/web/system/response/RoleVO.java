@@ -25,6 +25,9 @@ public class RoleVO implements Serializable {
     @ApiModelProperty("角色名")
     private String roleName;
 
+    @ApiModelProperty("角色码")
+    private String roleCode;
+
     @ApiModelProperty("角色描述")
     private String description;
 

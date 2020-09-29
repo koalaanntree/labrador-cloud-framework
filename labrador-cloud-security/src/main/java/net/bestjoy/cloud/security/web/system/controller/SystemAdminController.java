@@ -7,8 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.bean.PageBean;
 import net.bestjoy.cloud.core.bean.PageData;
 import net.bestjoy.cloud.core.bean.Result;
+import net.bestjoy.cloud.core.error.BusinessAssert;
 import net.bestjoy.cloud.core.error.BusinessException;
-import net.bestjoy.cloud.security.annotation.IgnoreAuth;
+import net.bestjoy.cloud.security.core.dto.QueryMenuDTO;
+import net.bestjoy.cloud.security.core.dto.QueryOperationDTO;
 import net.bestjoy.cloud.security.core.dto.QueryRoleDTO;
 import net.bestjoy.cloud.security.core.entitiy.*;
 import net.bestjoy.cloud.security.core.enums.MenuStatusEnum;
@@ -53,7 +55,6 @@ public class SystemAdminController {
     @Resource
     private PermissionSubjectContext permissionSubjectContext;
 
-    @IgnoreAuth(pathInfo = "/v1/sys/subject/role/list")
     @GetMapping("subject/role/list")
     @ApiOperation("获取权限主体需要的角色列表")
     @PreAuthorize("hasRole('ADMIN')")
@@ -67,7 +68,6 @@ public class SystemAdminController {
         return optional.map(roles -> Result.success(roles.stream().map(SystemDataConverter.INSTATNCE::roleToVO).collect(Collectors.toList()))).orElseGet(() -> Result.success(new ArrayList<>()));
     }
 
-    @IgnoreAuth(pathInfo = "/v1/sys/subject/permission/list")
     @GetMapping("subject/permission/list")
     @ApiOperation("获取权限主体所属的权限列表")
     @PreAuthorize("hasRole('ADMIN')")
@@ -81,6 +81,27 @@ public class SystemAdminController {
         return optional.map(
                 permissions -> Result.success(permissions.stream().map(SystemDataConverter.INSTATNCE::permissionToVO).collect(Collectors.toList()))
         ).orElseGet(() -> Result.success(new ArrayList<>()));
+    }
+
+    @ApiOperation("操作列表查询")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("operation/list")
+    public Result<PageData<OperationVO>> listOperations(
+            PageBean<Operation> pageBean, QueryOperationDTO queryOperationDTO) {
+
+        Optional<IPage<Operation>> operation = Optional.ofNullable(permissionService.queryOperation(pageBean.getPage(), queryOperationDTO));
+
+        return operation.map((pageResult) -> Result.success(PageData.buildResult(pageResult, SystemDataConverter.INSTATNCE::operationToVO)))
+                .orElseGet(() -> Result.success(PageData.emptyResult()));
+    }
+
+    @ApiOperation("物理删除操作")
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("operation/delete")
+    public Result<Boolean> delOperation(String operationId) {
+        permissionService.deleteOperation(operationId);
+
+        return Result.success(Boolean.TRUE);
     }
 
 
@@ -156,6 +177,14 @@ public class SystemAdminController {
     public Result<PageData<PermissionVO>> queryRolePermissionList(@RequestParam String roleId, PageBean<Permission> pageBean) {
         return Result.success(
                 PageData.buildResult(permissionService.queryRolePermission(pageBean.getPage(), roleId), SystemDataConverter.INSTATNCE::permissionToVO));
+    }
+
+    @GetMapping("menu/list")
+    @ApiOperation("菜单列表，不区分状态，可单级查询")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Result<PageData<MenuVO>> queryMenuList(PageBean<Menu> pageBean, QueryMenuDTO queryMenuDTO) {
+        return Result.success(
+                PageData.buildResult(permissionService.queryMenu(pageBean.getPage(), queryMenuDTO), SystemDataConverter.INSTATNCE::menuToVO));
     }
 
     @PostMapping("menu/permission/set")
@@ -261,7 +290,7 @@ public class SystemAdminController {
             menu = permissionSubjectProvider.getPermissionSubjectByCode(saveOrUpdateMenuRequest.getMenuCode());
 
             if (menu != null) {
-                log.warn("add menu already exist:: menuName:{}", saveOrUpdateMenuRequest.getMenuName());
+                log.warn("add menu already exist:: menuCode:{}", saveOrUpdateMenuRequest.getMenuCode());
                 throw new BusinessException(MENU_ALREADY_EXIST_ERROR);
             }
 
@@ -348,6 +377,10 @@ public class SystemAdminController {
                 throw new BusinessException(PERMISSION_ALREADY_EXIST_ERROR);
             }
 
+            BusinessAssert.notNull(saveOrUpdatePermissionRequest.getPermissionType(), "permissionType is null.");
+            BusinessAssert.notBlank(saveOrUpdatePermissionRequest.getOperationId(), "operationId is null.");
+            BusinessAssert.notBlank(saveOrUpdatePermissionRequest.getSubjectId(), "subjectId is null");
+
             permission = new Permission();
             BeanUtils.copyProperties(saveOrUpdatePermissionRequest, permission);
             permissionService.savePermission(permission, saveOrUpdatePermissionRequest.getPermissionType(), saveOrUpdatePermissionRequest.getSubjectId(), saveOrUpdatePermissionRequest.getOperationId());
@@ -358,6 +391,12 @@ public class SystemAdminController {
             }
             BeanUtils.copyProperties(saveOrUpdatePermissionRequest, permission);
             permissionService.updatePermission(permission);
+        }
+
+        if (!StringUtils.isEmpty(saveOrUpdatePermissionRequest.getRoleId())) {
+            log.info("relate role:{}, permission:{}", saveOrUpdatePermissionRequest.getRoleId(), saveOrUpdatePermissionRequest.getPermissionId());
+
+            permissionService.addRolePermission(saveOrUpdatePermissionRequest.getRoleId(), permission.getPermissionId());
         }
 
         return Result.success(permission, SystemDataConverter.INSTATNCE::permissionToVO);

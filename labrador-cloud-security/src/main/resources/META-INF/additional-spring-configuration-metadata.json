@@ -1,0 +1,36 @@
+{
+  "groups": [
+    {
+      "name": "bestjoy.security",
+      "type": "net.bestjoy.cloud.security.config.SecurityProperties",
+      "sourceType": "net.bestjoy.cloud.security.config.SecurityProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "bestjoy.security.system-name",
+      "type": "java.lang.String",
+      "description": "系统名称，默认为springApplicationName"
+    },
+    {
+      "name": "bestjoy.security.system-homepage",
+      "type": "java.lang.String",
+      "description": "系统首页地址"
+    },
+    {
+      "name": "bestjoy.security.system-description",
+      "type": "java.lang.String",
+      "description": "系统描述简介"
+    },
+    {
+      "name": "bestjoy.security.system-version",
+      "type": "java.lang.String",
+      "description": "系统版本"
+    },
+    {
+      "name": "bestjoy.security.ignored-urls",
+      "type": "java.util.List",
+      "description": "过滤认证链接集合，可通配符"
+    }
+  ]
+}

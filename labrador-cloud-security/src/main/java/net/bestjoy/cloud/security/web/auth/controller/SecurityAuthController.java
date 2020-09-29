@@ -3,7 +3,6 @@ package net.bestjoy.cloud.security.web.auth.controller;
 import io.swagger.annotations.Api;
 import net.bestjoy.cloud.core.bean.Result;
 import net.bestjoy.cloud.core.error.BusinessException;
-import net.bestjoy.cloud.security.annotation.IgnoreAuth;
 import net.bestjoy.cloud.security.constant.SecurityConstant;
 import net.bestjoy.cloud.security.context.SecurityContext;
 import net.bestjoy.cloud.security.converter.UserConverter;
@@ -86,7 +85,6 @@ public class SecurityAuthController {
      *
      * @return
      */
-    @IgnoreAuth(pathInfo = "/v1/security/auth/login")
     @PostMapping("/login")
     public Result<LoginResponse> login(
             @RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) {
@@ -119,7 +117,6 @@ public class SecurityAuthController {
         return loginResponse;
     }
 
-    @IgnoreAuth(pathInfo = "/v1/security/auth/registerAndLogin")
     @PostMapping("/registerAndLogin")
     public Result<LoginResponse> registerAndLogin(
             RegisterUserRequest registerUserRequest, HttpServletResponse response) {

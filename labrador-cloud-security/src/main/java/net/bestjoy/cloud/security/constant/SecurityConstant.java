@@ -25,4 +25,14 @@ public interface SecurityConstant {
      * 默认用户
      */
     String PRINCIPAL_ANONYMOUS = "anonymousUser";
+
+    /***
+     * security urls
+     */
+    String[] SECURITY_IGNORED_URLS = {
+            "/v1/security/auth/login",
+            "/v1/security/auth/registerAndLogin",
+            "/v1/sys/subject/role/list",
+            "/v1/sys/subject/permission/list"
+    };
 }

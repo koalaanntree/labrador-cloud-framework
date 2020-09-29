@@ -19,6 +19,9 @@ import java.io.Serializable;
 @ToString
 public class QueryRoleDTO implements Serializable, QueryCondition<Role> {
 
+    @ApiModelProperty("角色ID")
+    private String roleId;
+
     @ApiModelProperty("角色名称，模糊查询")
     private String roleName;
 
@@ -29,6 +32,10 @@ public class QueryRoleDTO implements Serializable, QueryCondition<Role> {
     public QueryWrapper<Role> buildQueryCondition() {
         QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Role::getSystemId, SecurityContext.getSystemId());
+
+        if (StringUtils.isNotBlank(roleId)) {
+            queryWrapper.lambda().eq(Role::getRoleId, roleId);
+        }
 
         if (StringUtils.isNotBlank(roleName)) {
             queryWrapper.lambda().like(Role::getRoleName, roleName);

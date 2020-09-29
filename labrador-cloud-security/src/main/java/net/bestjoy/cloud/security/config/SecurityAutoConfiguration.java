@@ -6,12 +6,17 @@ import net.bestjoy.cloud.security.filter.JwtAuthenticationTokenFilter;
 import net.bestjoy.cloud.security.handler.AppAccessDecisionManager;
 import net.bestjoy.cloud.security.handler.AppAuthenticationProvider;
 import net.bestjoy.cloud.security.handler.JwtAuthenticationEntryPoint;
+import net.bestjoy.cloud.security.persistent.config.SecurityMapperConfig;
 import net.bestjoy.cloud.security.service.impl.AppUserDetailsServiceImpl;
 import net.bestjoy.cloud.security.util.JwtHelper;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.BeanIds;
@@ -31,6 +36,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.util.CollectionUtils;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
@@ -62,6 +68,8 @@ public class SecurityAutoConfiguration extends WebSecurityConfigurerAdapter {
     private AppUserDetailsServiceImpl appUserDetailsService;
     @Resource
     private AppAccessDecisionManager accessDecisionManager;
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Resource
     private Docket api;
@@ -90,7 +98,7 @@ public class SecurityAutoConfiguration extends WebSecurityConfigurerAdapter {
         return securityContexts;
     }
 
-    List<SecurityReference> defaultAuth() {
+    private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
@@ -123,6 +131,17 @@ public class SecurityAutoConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**")
                 .antMatchers("/v2/api-doc**")
                 .antMatchers("/swagger-resources/**");
+        //过滤security url
+        for (String url : SecurityConstant.SECURITY_IGNORED_URLS) {
+            web.ignoring().antMatchers(url);
+        }
+
+        //过滤外部自定义url
+        if (!CollectionUtils.isEmpty(securityProperties.getIgnoredUrls())) {
+            securityProperties.getIgnoredUrls().forEach(url -> {
+                web.ignoring().antMatchers(url);
+            });
+        }
     }
 
     @Override

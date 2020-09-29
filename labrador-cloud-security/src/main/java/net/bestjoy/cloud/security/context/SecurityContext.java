@@ -42,7 +42,7 @@ public final class SecurityContext {
      * 获取当前用户角色集合
      * @return
      */
-    public static Set<String> getCurrentUserRoleList() {
+    public static Set<String> getCurrentUserRoles() {
         return getCurrentUser().getRoles();
     }
 

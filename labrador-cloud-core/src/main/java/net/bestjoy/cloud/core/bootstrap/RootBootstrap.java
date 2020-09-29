@@ -1,5 +1,6 @@
 package net.bestjoy.cloud.core.bootstrap;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bestjoy.cloud.core.util.Dates;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,8 @@ import org.springframework.boot.context.event.ApplicationFailedEvent;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
+
+import java.net.InetAddress;
 
 /***
  * 启动基类
@@ -48,6 +51,7 @@ public class RootBootstrap {
      * 应用启动成功事件
      */
     private static class ApplicationStartedEventListener implements ApplicationListener<ApplicationStartedEvent> {
+        @SneakyThrows
         @Override
         public void onApplicationEvent(ApplicationStartedEvent event) {
             Environment environment = event.getApplicationContext().getEnvironment();
@@ -58,6 +62,7 @@ public class RootBootstrap {
                             + "\n app version:" + environment.getProperty("spring.application.version", "undefined")
                             + ",started time:" + Dates.formatNow() + "\n\t"
                             + "\n activated profiles: " + StringUtils.join(environment.getActiveProfiles(), ",") + "\n\t"
+                            + "\n visit local host: " + StringUtils.join("http://", InetAddress.getLocalHost().getHostAddress(), ":", environment.getProperty("server.port")) + "\n\t"
                             + "\n---------------------------------------");
 
         }

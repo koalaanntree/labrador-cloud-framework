@@ -38,4 +38,7 @@ public class SaveOrUpdatePermissionRequest implements Serializable {
 
     @ApiModelProperty("操作id，新增时必填；更新不支持，需要单独操作")
     private String operationId;
+
+    @ApiModelProperty("角色ID")
+    private String roleId;
 }
