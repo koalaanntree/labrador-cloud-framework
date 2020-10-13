@@ -2,6 +2,7 @@ package net.bestjoy.cloud.core.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PropertyFilter;
+import org.springframework.core.io.InputStreamSource;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -60,7 +61,7 @@ public class ParamsUtil {
 
         Map<String, Object> params = new HashMap<>();
         for (int i = 0; i < parameterNames.length; i++) {
-            if (args[i] instanceof ServletRequest || args[i] instanceof ServletResponse) {
+            if (args[i] instanceof ServletRequest || args[i] instanceof ServletResponse || args[i] instanceof InputStreamSource) {
                 continue;
             }
             params.put(parameterNames[i], args[i]);
